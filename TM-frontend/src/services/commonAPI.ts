@@ -1,4 +1,8 @@
-import axios, { type AxiosRequestConfig, type Method, type AxiosResponse } from 'axios'
+import axios, {
+  type AxiosRequestConfig,
+  type Method,
+  type AxiosResponse,
+} from 'axios'
 
 export const commonAPI = async <T = any>(
   httpMethod: Method,
@@ -6,25 +10,34 @@ export const commonAPI = async <T = any>(
   reqBody?: any,
   reqHeader?: Record<string, string>
 ): Promise<AxiosResponse<T>> => {
-
-  const reqConfig: AxiosRequestConfig = {
+  const config: AxiosRequestConfig = {
     method: httpMethod,
     url,
-    data: reqBody,
-    headers: reqHeader || {
+    headers: {
       'Content-Type': 'application/json',
+      ...(reqHeader || {}),
     },
   }
 
+  // Only set 'data' if the method is not GET
+  if (httpMethod !== 'GET' && reqBody) {
+    config.data = reqBody
+  }
+
   try {
-    const response = await axios<T>(reqConfig)
+    const response = await axios<T>(config)
     return response
   } catch (error: any) {
-    // If you want to handle or transform errors, you can do it here
-    if (error.response) return error.response
-    throw error
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        return error.response
+      } else {
+        console.error("Axios error:", error.message)
+        throw new Error("Network error. Please try again.")
+      }
+    }
+
+    console.error("Unexpected error:", error)
+    throw new Error("Something went wrong.")
   }
 }
-
-
-

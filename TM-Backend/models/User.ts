@@ -11,7 +11,6 @@ export interface userAttributes {
 
     createdAt?: Date;
     updatedAt?: Date;
-    deletedAt?: Date;
 }
 
 export interface userInput extends Optional<userAttributes, | 'id' >{}
@@ -26,7 +25,6 @@ export class User extends Model<userAttributes,userInput> implements userAttribu
 
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
-    public readonly deletedAt!: Date;
 }
 
 User.init({
@@ -55,6 +53,5 @@ User.init({
 }
 }, {
     timestamps: true,
-    sequelize: sequelize,
-    paranoid:true // This will be set in the index file where the Sequelize instance is created
+    sequelize: sequelize
 })

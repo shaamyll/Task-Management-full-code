@@ -3,8 +3,9 @@ import './App.css'
 import { Auth } from './Pages/Auth'
 import Userdashboard from './Pages/User/Userdashboard'
 import { Toaster } from 'sonner'
-import AdminUsersPage from './Pages/Admin/AdminUsersPage'
-import { SidebarProvider } from './components/ui/sidebar'
+  import { SidebarProvider } from './components/ui/sidebar'
+import ManageUsers from './Pages/Admin/ManageUsers'
+import TaskPage from './Pages/Admin/TaskPage'
 
 
 function App() {
@@ -15,9 +16,11 @@ function App() {
      <SidebarProvider defaultOpen={true}>
        <Routes>
         <Route path="/" element={<Auth/>} />
-        <Route path="/register" element={<Auth register={true} />} />
+        <Route path="/register" element={<Auth register />} />
         <Route path='/userDashboard' element={<Userdashboard/>}/>
-        <Route path='/allUsersAdmin' element={<AdminUsersPage/>}/>
+        {/* Admin Pages */}
+        <Route path='/manageUsers' element={<ManageUsers/>}/>
+        <Route  path='/taskPage' element={<TaskPage/>} />
       </Routes>
      </SidebarProvider>
     </>  

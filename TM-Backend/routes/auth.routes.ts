@@ -20,7 +20,7 @@ class AuthRoutes implements Route {
 
     this.router.post(`${this.path}/login`, validationMiddleware(LoginDTO, 'body'), this.authController.login);
 
-    this.router.get(`${this.path}/allUsers`, authMiddleware, this.authController.fetchAllUsers);
+    this.router.get(`/allUsers`, authMiddleware, this.authController.fetchAllUsers);
 
     this.router.delete(`/deleteUser/:id`, authMiddleware, this.authController.deleteUser);
 

@@ -4,7 +4,7 @@ import {
   SidebarGroup,
   SidebarGroupContent,
 } from "@/components/ui/sidebar";
-import { UsersRound,LayoutDashboard } from 'lucide-react';
+import { UsersRound,LayoutDashboard,FilePen  } from 'lucide-react';
 
 function AdminSideBar() {
   return (
@@ -25,11 +25,18 @@ function AdminSideBar() {
                 Dashboard
               </a>
               <a
-                href="/allUsersAdmin"
+                href="/manageUsers"
                 className="flex items-center gap-3 px-4 py-4 text-gray-700 text-base font-medium rounded transition hover:bg-gray-200 "
               >
                 <UsersRound />
                 Manage Users
+              </a>
+               <a
+                href="/taskPage"
+                className="flex items-center gap-3 px-4 py-4 text-gray-700 text-base font-medium rounded transition hover:bg-gray-200 "
+              >
+                <FilePen  />
+                Projects
               </a>
 
             </SidebarGroupContent>

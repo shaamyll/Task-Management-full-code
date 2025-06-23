@@ -1,9 +1,26 @@
 import  { useEffect, useState } from 'react'
 import { Button } from './ui/button'
+import { useMutation } from '@tanstack/react-query'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
 
 function Header() {
   const [email, setEmail] = useState("")
   const [username,setUsername] = useState("")
+  const navigate = useNavigate()
+
+  const {mutate:logout,isPending} = useMutation({
+    mutationFn: async()=>{
+      await new Promise((res)=>setTimeout(res,500))
+      localStorage.removeItem('token');
+      localStorage.removeItem('userEmail');
+      localStorage.removeItem('username');
+    },
+    onSuccess:()=>{
+      toast.error("Logged out");
+      navigate('/')
+    }
+  })
 
   useEffect(() => {
     const storedEmail = localStorage.getItem('userEmail')
@@ -22,8 +39,10 @@ function Header() {
         {username} ({email})
       </p>
     )}
-    <Button className="bg-black text-white hover:bg-gray-800 px-4 py-2 rounded">
-      Logout
+    <Button className="bg-black text-white hover:bg-gray-800 px-4 py-2 rounded" onClick={()=>logout()} disabled={isPending}>
+      {
+        isPending?"Logging out..":"Log Out"
+      }
     </Button>
   </div>
 </header>

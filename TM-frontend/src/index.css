@@ -10,6 +10,13 @@
 }
 
 
+* {
+  padding: 0;
+  margin: 0;
+}
+
+
+
 
 
 
@@ -102,9 +109,14 @@
         --sidebar-ring: 217.2 91.2% 59.8%}}
 
 
+  
+        
 
 
 @layer base {
+
+  
+  
   :root {
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -114,6 +126,14 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+--accent: hsl(240, 4.8%, 95.9%);
+    --accent-foreground: hsl(240, 5.9%, 10%);
+    --destructive: hsl(0, 84.2%, 60.2%);
+    --destructive-foreground: hsl(0, 0%, 98%);
+    --black: hsl(0, 0%, 0%);
+    --black-foreground: hsl(0, 0%, 100%);
+
+
   }
 
   .dark {

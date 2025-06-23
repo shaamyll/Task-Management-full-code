@@ -59,7 +59,7 @@ export const Auth: React.FC<AuthProps> = ({ register }) => {
        if(role === 'user'){
          navigate('/userDashboard');
        } else if(role === 'admin'){
-        navigate('/allUsersAdmin')
+        navigate('/manageUsers')
        }
       }
 
@@ -72,7 +72,6 @@ export const Auth: React.FC<AuthProps> = ({ register }) => {
 
   const onSubmit = (data: AuthFormData) => {
     mutate(data)
-    console.log("Form submitted", data);
   }
 
 
@@ -147,7 +146,7 @@ export const Auth: React.FC<AuthProps> = ({ register }) => {
                 className="bg-gray-100 text-black placeholder-gray-400 border-gray-300 rounded focus:border-black"
               />
             </div>
-            <Button type="submit" className="w-full bg-black text-white hover:bg-gray-800 rounded">
+            <Button type="submit" className="w-full bg-black text-white hover:bg-gray-800 rounded" variant="ghost">
               {isPending ? (register ? "Registering..." : "Logging in...") : (register ? "Sign Up" : "Login")}
             </Button>
           </form>
