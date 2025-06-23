@@ -28,24 +28,3 @@ export const commonAPI = async <T = any>(
 
 
 
-// import axios from 'axios'
-
-// export const commonAPI = async (
-//   method: 'GET' | 'POST' | 'PUT' | 'DELETE',
-//   url: string,
-//   body?: any,
-//   headers?: Record<string, string>
-// ) => {
-//   try {
-//     const response = await axios({
-//       method,
-//       url,
-//       data: body,
-//       headers: headers || {
-//         'Content-Type': 'application/json',
-//       },
-//     })
-//     return response
-//   } catch (error) {
-//     return error
-//   }
