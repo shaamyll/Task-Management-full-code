@@ -24,3 +24,10 @@ password: string;
 
 
 }
+
+
+export interface UserFilters {
+  searchName?: string;
+  searchEmail?: string;
+  role?: string;
+}

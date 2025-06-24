@@ -1,5 +1,5 @@
-import { where } from "sequelize";
-import { LoginDTO, SignUpDto } from "../dtos/auth.dto";
+import { Op, where } from "sequelize";
+import { LoginDTO, SignUpDto, UserFilters } from "../dtos/auth.dto";
 import { UserData } from "../interfaces/auth.Interface";
 import { User } from "../models/User"
 import jwt from "jsonwebtoken";
@@ -43,9 +43,36 @@ class AuthServices {
     }
 
     //fetch all users
-    public async fetchAllUsers(): Promise<UserData[]> {
-        return await User.findAll()
-    }
+    // public async fetchAllUsers(): Promise<UserData[]> {
+    //     return await User.findAll()
+    // }
+
+
+    
+ public async fetchAllUsers(filters: UserFilters): Promise<User[]> {
+  const where: any = {};
+
+  if (filters.searchName) {
+    where.username = { [Op.iLike]: `%${filters.searchName}%` };
+  }
+
+  if (filters.searchEmail) {
+    where.email = { [Op.iLike]: `%${filters.searchEmail}%` };
+  }
+
+  if (filters.role) {
+    where.role = filters.role;
+  }
+
+  console.log("📦 Final WHERE clause:", where);
+
+  return await User.findAll({
+    where,
+    order: [['createdAt', 'DESC']],
+  });
+}
+
+
 
     //Delete user
     public async deleteUser(id:number): Promise<void> {
@@ -56,6 +83,35 @@ class AuthServices {
 
         const deleteUser = await User.destroy({where:{id}})
     }
+
+
+      public async createUser(data: any): Promise<UserData> {
+        const user = await User.findOne({ where: { email: data.email } })
+        if (user) {
+            throw { status: 409, message: "User already exists" }
+        }
+        const newUser = await User.create({
+            email: data.email,
+            username: data.username,
+            password: data.password,
+            role: data.role || "user"
+        });
+        console.log(newUser)
+        return newUser;
+    }
+
+
+        public async updateUser(id:string,data: SignUpDto): Promise<any> {
+        const updatedUser = await User.update(data,{
+           where:{
+            id
+           },
+        returning:true
+        });
+
+        return updatedUser;
+    }
+
 
 
 

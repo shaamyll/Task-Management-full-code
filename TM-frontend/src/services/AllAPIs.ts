@@ -4,7 +4,7 @@ import {commonAPI} from './commonAPI'
 
 
 export const registerAPI   = async (reqBody: any) => {
-    return await commonAPI('post', `${serverURL}/api/auth/register`,null, reqBody)
+    return await commonAPI('post', `${serverURL}/api/auth/register`, reqBody)
 }
 
 
@@ -13,9 +13,10 @@ export const loginAPI   = async (reqBody: any) => {
 }
 
 
-
-export const fetchAllUsersAPI   = async (reqHeader:any) => {
-    return await commonAPI('get', `${serverURL}/api/allUsers`, null, reqHeader)
+//Fetch all users
+export const fetchAllUsersAPI   = async (filters:any,reqHeader:any) => {
+    const queryParams = new URLSearchParams(filters).toString();
+    return await commonAPI('get', `${serverURL}/api/allUsers?${queryParams}`, null, reqHeader)
 }
 
 //Create user API
@@ -23,8 +24,19 @@ export const createUserAPI   = async (reqBody: any,reqHeader:any) => {
     return await commonAPI('post', `${serverURL}/api/createUser`, reqBody,reqHeader)
 }
 
+//Update user
+export const updateUserAPI   = async (userId:any,reqBody: any,reqHeader:any) => {
+    return await commonAPI('put', `${serverURL}/api/updateUser/${userId}`, reqBody,reqHeader)
+}
+
+
 export const deleteUserAPI   = async (userId:number,reqHeader:any) => {
     return await commonAPI('delete', `${serverURL}/api/deleteUser/${userId}`, null, reqHeader)
+}
+
+//Create Task
+export const createTaskAPI   = async (reqBody:any,reqHeader:any) => {
+    return await commonAPI('post', `${serverURL}/api/task/createTask`, reqBody, reqHeader)
 }
 
 

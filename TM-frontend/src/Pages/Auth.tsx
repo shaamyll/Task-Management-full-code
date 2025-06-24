@@ -41,8 +41,9 @@ export const Auth: React.FC<AuthProps> = ({ register }) => {
 
   const { mutate, isPending } = useMutation({
     mutationFn,
-    onSuccess: (res: any) => {
-      console.log(res.data);
+    onSuccess: async(res: any) => {
+      
+       console.log(res.data);
       toast.success(res.data.message)
       const email: any = res?.data?.data?.user?.email;
       const token: any = res?.data?.data?.token;
@@ -51,7 +52,10 @@ export const Auth: React.FC<AuthProps> = ({ register }) => {
       localStorage.setItem('userEmail', email);
       localStorage.setItem('username', username);
       const role:any = res?.data?.data?.user?.role;
+      localStorage.setItem('role', role);
       console.log(role)
+
+       await new Promise((resolve) => setTimeout(resolve, 2000));
 
       if (register) {
         navigate('/');
@@ -60,10 +64,11 @@ export const Auth: React.FC<AuthProps> = ({ register }) => {
          navigate('/userDashboard');
        } else if(role === 'admin'){
         navigate('/manageUsers')
-       }
+       } else {
+        reset()
       }
-
-      reset()
+      } 
+      
     },
     onError: (error: any) => {
       console.error("Registration failed", error)
@@ -106,7 +111,7 @@ export const Auth: React.FC<AuthProps> = ({ register }) => {
                     {...formRegister("username")}
                     placeholder="John Doe"
                     required
-                    className="bg-gray-100 text-black border-gray-300 rounded focus:border-black"
+                   
                   />
                 </div>
               )
@@ -120,7 +125,6 @@ export const Auth: React.FC<AuthProps> = ({ register }) => {
                 {...formRegister("email")}
                 placeholder="m@example.com"
                 required
-                className="bg-gray-100  text-black  border-black-300 rounded focus:border-black "
               />
             </div>
             <div className="space-y-2">
@@ -146,7 +150,7 @@ export const Auth: React.FC<AuthProps> = ({ register }) => {
                 className="bg-gray-100 text-black placeholder-gray-400 border-gray-300 rounded focus:border-black"
               />
             </div>
-            <Button type="submit" className="w-full bg-black text-white hover:bg-gray-800 rounded" variant="ghost">
+            <Button type="submit" className="w-full ">
               {isPending ? (register ? "Registering..." : "Logging in...") : (register ? "Sign Up" : "Login")}
             </Button>
           </form>

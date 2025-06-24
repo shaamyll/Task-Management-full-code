@@ -1,4 +1,4 @@
-import { deleteUserAPI } from '@/services/AllAPIs';
+import React from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import {
@@ -15,36 +15,16 @@ import {
 import { Trash2 } from 'lucide-react';
 import { Button } from '../ui/button';
 
-const DeleteUser = ({ user }: { user: any }) => {
 
-    const queryClient = useQueryClient()
+const DeleteTask = ({task}:{task:any}) => {
 
-    const { mutate: deleteUser, isPending } = useMutation({
-        mutationFn: async (userId: number) => {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                throw new Error('No token found');
-            }
-            const header = {
-                Authorization: `${token}`,
-                'Content-Type': 'application/json'
-            };
-            const response = await deleteUserAPI(userId, header)
-            return response
-        },
-        onSuccess: (res: any) => {
-            queryClient.invalidateQueries({ queryKey: ["userData"] })
-            console.log(res)
-            toast.success(res.data?.message)
-        },
-        onError: (data) => {
-            console.log(data)
-        }
+
+    const {isPending} = useMutation({
+
     })
-
-    return (
-        <div>
-            <AlertDialog>
+  return (
+    <div>
+         <AlertDialog>
                 <AlertDialogTrigger asChild>
                     <Button variant="destructive">
                         <Trash2 />
@@ -54,7 +34,7 @@ const DeleteUser = ({ user }: { user: any }) => {
                     <AlertDialogHeader>
                         <AlertDialogTitle>Delete User?</AlertDialogTitle>
                         <AlertDialogDescription>
-                            Are you sure you want to delete user <strong>{user.username}</strong>? This action cannot be undone.
+                            Are you sure you want to delete user <strong>{task.username}</strong>? This action cannot be undone.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
@@ -64,16 +44,15 @@ const DeleteUser = ({ user }: { user: any }) => {
                         <AlertDialogAction
                             className="bg-red-600 hover:bg-red-700 text-white rounded"
                             disabled={isPending}
-                            onClick={() => deleteUser(user.id)}
+                       
                         >
                             {isPending ? "Deleting..." : "Yes, Delete"}
                         </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
-
-        </div>
-    )
+    </div>
+  )
 }
 
-export default DeleteUser
+export default DeleteTask

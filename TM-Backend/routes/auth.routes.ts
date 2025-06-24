@@ -20,9 +20,17 @@ class AuthRoutes implements Route {
 
     this.router.post(`${this.path}/login`, validationMiddleware(LoginDTO, 'body'), this.authController.login);
 
+    //Create user
+    this.router.post(`/createUser`, validationMiddleware(SignUpDto, 'body'), authMiddleware,this.authController.createUser);
+
+    //fetch all Users
     this.router.get(`/allUsers`, authMiddleware, this.authController.fetchAllUsers);
 
     this.router.delete(`/deleteUser/:id`, authMiddleware, this.authController.deleteUser);
+
+    //Edti user
+  this.router.put(`/updateUser/:id`, validationMiddleware(SignUpDto, 'body'),authMiddleware, this.authController.updateUser);
+
 
   }
 

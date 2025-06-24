@@ -1,4 +1,5 @@
 import AdminSideBar from '@/components/Admin/AdminSideBar'
+import AllTasks from '@/components/Admin/AllTasks'
 import Header from '@/components/Header'
 
 function TaskPage() {
@@ -19,13 +20,13 @@ function TaskPage() {
 
 
           <h1 className="text-3xl font-semibold text-gray-800 mb-6">
-            Users List
+            Tasks
           </h1>
-          <p>Admin can add,delete and assign roles to the Users</p>
+          <p>Admin can create,delete Tasks..</p>
 
 
           
-        
+          <AllTasks/>
 
 
 

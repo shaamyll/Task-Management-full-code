@@ -14,10 +14,11 @@ import { Label } from "@/components/ui/label"
 
 import { Controller, useForm } from "react-hook-form"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { createUserAPI } from "@/services/AllAPIs"
+import {  updateUserAPI } from "@/services/AllAPIs"
 import { toast } from "sonner"
 import { useState } from "react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
+import { Pencil } from "lucide-react"
 
 type UserForm = {
     username?: string
@@ -26,11 +27,15 @@ type UserForm = {
     role?: string
 }
 
-const CreateUser = () => {
+const UpdateUser = ({ user }: { user: any }) => {
 
     const [open, setopen] = useState(false)
 
-    const { register, reset, handleSubmit, control } = useForm<UserForm>()
+    const { register, handleSubmit, control } = useForm<UserForm>({
+        defaultValues: {
+            role:user.role,
+        }
+    })
 
     const queryClient = useQueryClient()
 
@@ -42,7 +47,7 @@ const CreateUser = () => {
                 Authorization: `${token}`,
                 "Content-Type": "application/json"
             }
-            const response = await createUserAPI(data, headers)
+            const response = await updateUserAPI(user.id,data, headers)
             return response
 
         },
@@ -50,7 +55,6 @@ const CreateUser = () => {
             toast.success(res.data.message)
             queryClient.invalidateQueries({ queryKey: ["userData"] })
             console.log(res)
-            reset()
         },
         onError: (err: any) => {
             toast.error(err.response?.data?.message || "Failed to create user")
@@ -64,34 +68,37 @@ const CreateUser = () => {
     }
 
 
+
+
+
     return (
         <div>
             <Dialog open={open} onOpenChange={setopen}>
                 <DialogTrigger asChild>
-                    <Button className="bg-green-500 text-white rounded shadow  hover:bg-green-600">+ Add User</Button>
+                    <Button ><Pencil /></Button>
                 </DialogTrigger>
 
                 <DialogContent className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-md">
 
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <DialogHeader>
-                            <DialogTitle className=" text-lg">Add New User</DialogTitle>
+                            <DialogTitle className=" text-2xl">Update User</DialogTitle>
                         </DialogHeader>
 
                         <div className="grid gap-4 py-4">
                             <div>
                                 <Label htmlFor="username">Username</Label>
-                                <Input id="username" {...register("username")} className="bg-gray-100 text-black border-gray-300 rounded focus:border-black" required />
+                                <Input id="username" defaultValue={user.username} {...register("username")} className="bg-gray-100 text-black border-gray-300 rounded focus:border-black" required />
                             </div>
 
                             <div>
                                 <Label htmlFor="email">Email</Label>
-                                <Input type="email" id="email" {...register("email")} className="bg-gray-100 text-black border-gray-300 rounded focus:border-black" required />
+                                <Input type="email" defaultValue={user.email} id="email" {...register("email")} className="bg-gray-100 text-black border-gray-300 rounded focus:border-black" required />
                             </div>
 
                             <div>
                                 <Label htmlFor="password">Password</Label>
-                                <Input type="password" id="password" {...register("password")} className="bg-gray-100 text-black border-gray-300 rounded focus:border-black" required />
+                                <Input type="password" defaultValue={user.password}  {...register("password")} className="bg-gray-100 text-black border-gray-300 rounded focus:border-black" required />
                             </div>
 
                             <div>
@@ -102,7 +109,7 @@ const CreateUser = () => {
                                     name="role"
                                     control={control}
                                     render={({ field }) => (
-                                        <Select onValueChange={field.onChange} value={field.value}>
+                                        <Select  onValueChange={field.onChange} value={field.value}>
                                             <SelectTrigger id="role" className="focus:ring-2 focus:ring-black rounded shadow-md border-gray-300">
                                                 <SelectValue placeholder="Select role" />
                                             </SelectTrigger>
@@ -124,7 +131,7 @@ const CreateUser = () => {
                         <DialogFooter className='gap-3'>
                             <DialogClose><Button>Cancel</Button></DialogClose>
                             <Button type="submit" disabled={isPending} className="bg-black text-white rounded">
-                                {isPending ? "Creating..." : "Create User"}
+                                {isPending ? "updating..." : "update User"}
                             </Button>
                         </DialogFooter>
                     </form>
@@ -134,4 +141,4 @@ const CreateUser = () => {
     )
 }
 
-export default CreateUser
+export default UpdateUser

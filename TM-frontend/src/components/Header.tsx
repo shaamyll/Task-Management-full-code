@@ -34,12 +34,12 @@ function Header() {
   <h1 className="text-2xl font-bold text-gray-800">Task Manager</h1>
 
   <div className="flex items-center gap-4">
-    {email && (
+    {/* {email && (
       <p className="text-sm text-gray-600 font-medium">
         {username} ({email})
       </p>
-    )}
-    <Button className="bg-black text-white hover:bg-gray-800 px-4 py-2 rounded" onClick={()=>logout()} disabled={isPending}>
+    )} */}
+    <Button variant="destructive" onClick={()=>logout()} disabled={isPending}>
       {
         isPending?"Logging out..":"Log Out"
       }

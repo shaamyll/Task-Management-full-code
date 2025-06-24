@@ -18,7 +18,6 @@ export interface TaskAttributes {
 
     updatedAt?: Date;
     createdAt?: Date;
-    deletedAt?: Date;
 }
 
 export interface TaskInput extends Optional<TaskAttributes, | 'id'  >{}
@@ -37,7 +36,6 @@ export class Task extends Model<TaskAttributes,TaskInput> implements TaskAttribu
 
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
-    public readonly deletedAt!: Date;
 }
 
 Task.init({
@@ -61,7 +59,7 @@ Task.init({
   status: {
     type: DataTypes.STRING,
     allowNull: false,
-    defaultValue: 'pending' // ✅ new field added
+    defaultValue: 'planning' // ✅ new field added
   },
     startDate: {
         type: DataTypes.DATE,
@@ -78,5 +76,5 @@ Task.init({
 })
 
 
-User.hasMany(Task , { foreignKey: 'UserId' })
-Task.belongsTo(User, { foreignKey: 'UserId' })
+User.hasMany(Task , { foreignKey: 'userId' })
+Task.belongsTo(User, { foreignKey: 'userId' })
