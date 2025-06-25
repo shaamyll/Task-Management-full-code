@@ -90,7 +90,7 @@ public fetchAllUsers = async (req: Request, res: Response, next: NextFunction) =
 
 
     
-    //Deleet user
+    //Update user
       public updateUser = async (req: Request, res: Response , next:NextFunction) => {
 
         try {

@@ -23,7 +23,7 @@ import DeleteUser from './DeleteUser';
 import CreateUser from './CreateUser';
 import UpdateUser from './UpdateUser';
 
-
+    
 
 function AllUsers() {
 
@@ -45,9 +45,6 @@ function AllUsers() {
             if (!token) {
                 throw new Error('No token found');
             }
-
-          
-
             console.log(filters)
 
             const header = {
@@ -59,11 +56,6 @@ function AllUsers() {
         },
         refetchOnWindowFocus: false
     })
-
-
-    // if (isSuccess) {
-    //     console.log(data)
-    // }
 
     function Reset():any{
         setSearchEmail('');

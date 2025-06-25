@@ -40,8 +40,26 @@ export const createTaskAPI   = async (reqBody:any,reqHeader:any) => {
 }
 
 
-export const getAllTasksAPI   = async (reqHeader:any) => {
-    return await commonAPI('get', `${serverURL}/api/task/getAllTasks`, null, reqHeader)
+//Fetch All Tasks
+export const getAllTasksAPI = async (filters: any, reqHeader: any) => {
+  // Remove null/undefined values from filters
+  const sanitizedFilters:any = Object.fromEntries(
+    Object.entries(filters).filter(([_, v]) => v !== null && v !== undefined)
+  );
+  const queryParams = new URLSearchParams(sanitizedFilters).toString();
+  return await commonAPI(
+    'get',`${serverURL}/api/task/getAllTasks?${queryParams}`,null,reqHeader);
+};
+
+//Delete Task
+export const deleteTaskAPI   = async (taskId:number,reqHeader:any) => {
+    return await commonAPI('delete', `${serverURL}/api/deleteTask/${taskId}`, null, reqHeader)
+}
+
+
+//Update Task
+export const updateTaskAPI   = async (taskId:any,reqBody: any,reqHeader:any) => {
+    return await commonAPI('put', `${serverURL}/api/updateTask/${taskId}`,reqBody,reqHeader)
 }
 
 

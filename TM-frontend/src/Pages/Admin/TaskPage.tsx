@@ -1,4 +1,4 @@
-import AdminSideBar from '@/components/Admin/AdminSideBar'
+import AdminSideBar from '@/components/SideBar'
 import AllTasks from '@/components/Admin/AllTasks'
 import Header from '@/components/Header'
 

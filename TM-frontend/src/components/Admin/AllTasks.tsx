@@ -17,39 +17,69 @@ import {
 } from "@/components/ui/popover"
 import { Calendar } from "../ui/calendar"
 import { Label } from "../ui/label"
-import React from "react"
+import React, { useEffect, useState } from "react"
 import CreateTask from "./CreateTask"
 import { useQuery } from "@tanstack/react-query"
 import { getAllTasksAPI } from "@/services/AllAPIs"
 import DeleteTask from "./DeleteTask"
+import UpdateTask from "./UpdateTask"
 
 const AllTasks = () => {
 
     const [startOpen, setStartOpen] = React.useState(false)
     const [endOpen, setEndOpen] = React.useState(false)
-    const [startDate, setStartDate] = React.useState<Date | undefined>()
-    const [endDate, setEndDate] = React.useState<Date | undefined>()
+    const [startDateFilter, setStartDateFilter] = React.useState<Date | undefined>()
+    const [endDateFilter, setEndDateFilter] = React.useState<Date | undefined>()
+
+    const [searchTitle, setSearchTitle] = useState('');
+    const [statusFilter, setStatusFilter] = useState('');
 
 
+
+    const filters = {
+        searchTitle: searchTitle,
+        filterStatus: statusFilter,
+        filterStartDate: startDateFilter ? startDateFilter.toISOString() : null,
+        filterEndDate: endDateFilter ? endDateFilter.toISOString() : null
+    }
+
+    // console.log(filters)
 
     const { data, isLoading } = useQuery({
-        queryKey: ["userData"],
+        queryKey: ["taskKey", filters],
         queryFn: async () => {
             const token = localStorage.getItem('token')
             if (!token) {
                 throw new Error('No token found');
             }
 
+            console.log(filters)
 
             const header = {
                 Authorization: `${token}`,
                 'Content-Type': 'application/json'
             }
-            const response = await getAllTasksAPI(header)
+            const response = await getAllTasksAPI(filters, header)
             return response.data
         },
         refetchOnWindowFocus: false
     })
+
+    function Reset(): any {
+        setSearchTitle('');
+        setStatusFilter('')
+        setStartDateFilter(undefined)
+        setEndDateFilter(undefined)
+
+    }
+
+
+    const [userRole, setUserRole] = useState('')
+
+    useEffect(() => {
+        const currentUserRole = localStorage.getItem('role')
+        if (currentUserRole) setUserRole(currentUserRole)
+    }, [])
 
     return (
         <div>
@@ -57,12 +87,12 @@ const AllTasks = () => {
 
                 <div className="flex flex-col w-48">
                     <label htmlFor="name" className="mb-2 font-medium text-gray-700">Title</label>
-                    <Input />
+                    <Input onChange={(e) => setSearchTitle(e.target.value)} />
                 </div>
 
                 <div className="flex flex-col w-48">
                     <label htmlFor="name" className="mb-2 font-medium text-gray-700">Status</label>
-                    <Select>
+                    <Select onValueChange={setStatusFilter}>
                         <SelectTrigger id="role" >
                             <SelectValue placeholder="Status" />
                         </SelectTrigger>
@@ -108,7 +138,7 @@ const AllTasks = () => {
                                     variant="outline"
                                     id="date"
                                 >
-                                    {startDate ? startDate.toLocaleDateString() : "Select date"}
+                                    {startDateFilter ? startDateFilter.toLocaleDateString() : "Select date"}
                                     <ChevronDownIcon />
                                 </Button>
 
@@ -119,11 +149,11 @@ const AllTasks = () => {
                                 <div className="rounded-md overflow-hidden">
                                     <Calendar
                                         mode="single"
-                                        selected={startDate}
+                                        selected={startDateFilter}
                                         captionLayout="dropdown"
                                         className="w-full bg-white"
                                         onSelect={(date) => {
-                                            setStartDate(date)
+                                            setStartDateFilter(date)
                                             setStartOpen(false)
                                         }}
                                     />
@@ -146,7 +176,7 @@ const AllTasks = () => {
                                     variant="outline"
                                     id="date"
                                 >
-                                    {endDate ? endDate.toLocaleDateString() : "Select date"}
+                                    {endDateFilter ? endDateFilter.toLocaleDateString() : "Select date"}
                                     <ChevronDownIcon />
                                 </Button>
 
@@ -156,10 +186,10 @@ const AllTasks = () => {
                             >
                                 <Calendar
                                     mode="single"
-                                    selected={endDate}
+                                    selected={endDateFilter}
                                     captionLayout="dropdown"
                                     onSelect={(date) => {
-                                        setEndDate(date)
+                                        setEndDateFilter(date)
                                         setEndOpen(false)
                                     }}
                                 />
@@ -169,9 +199,12 @@ const AllTasks = () => {
                     </div>
                 </div>
 
-                <div className="flex flex-col w-48 gap-3">
+                <div className="flex flex-col gap-3">
                     <CreateTask />
-                    <Button className='rounded bg-black text-white shadow-md'>Reset</Button>
+                    {
+                        (searchTitle || statusFilter || startDateFilter || endDateFilter) &&
+                        (<Button className="w-sm" onClick={Reset}>Reset</Button>)
+                    }
                 </div>
 
 
@@ -212,12 +245,22 @@ const AllTasks = () => {
                                 >
                                     <TableCell className="px-6 py-4 text-center">{index + 1}</TableCell>
                                     <TableCell className="font-medium px-6 py-4">{task.title}</TableCell>
-                                    <TableCell className="px-6 py-4">{task.description}</TableCell>
+                                    <TableCell className="px-6 py-4 w-68">{task.description}</TableCell>
                                     <TableCell className="px-6 py-4">
-                                        <span className="inline-block px-4 py-1 text-sm font-medium text-white bg-emerald-500 rounded-full capitalize shadow">
-                                            {task.status}
+                                        <span
+                                            className={`inline-block px-4 py-1 text-sm font-medium text-white rounded-full capitalize shadow ${task.status === "planning"
+                                                ? "bg-yellow-500"
+                                                : task.status === "in_progress"
+                                                    ? "bg-blue-400"
+                                                    : task.status === "completed"
+                                                        ? "bg-green-500"
+                                                        : "bg-gray-400"
+                                                }`}
+                                        >
+                                            {task.status.replace("_", " ")}
                                         </span>
                                     </TableCell>
+
                                     <TableCell className="px-6 py-4">
                                         {new Date(task.createdAt).toLocaleDateString("en-US", {
                                             year: "numeric",
@@ -232,18 +275,21 @@ const AllTasks = () => {
                                             day: "numeric",
                                         })}
                                     </TableCell>
-                                     <TableCell className="px-6 py-4">
-                                        {new Date(task.endDate).toLocaleDateString("en-US", {
-                                            year: "numeric",
-                                            month: "long",
-                                            day: "numeric",
-                                        })}
+                                    <TableCell className="px-6 py-4">
+                                        {task.endDate
+                                            ? new Date(task.endDate).toLocaleDateString("en-US", {
+                                                year: "numeric",
+                                                month: "long",
+                                                day: "numeric",
+                                            })
+                                            : "—"}
                                     </TableCell>
+                                
                                     <TableCell className="px-6 py-4 text-right">
                                         <div className="flex justify-end items-center gap-2">
-                                            {/* {/* <UpdateUser task={task} /> */}
+                                            <UpdateTask task={task} />
 
-                                            <DeleteTask task={task} /> 
+                                            <DeleteTask task={task} />
                                         </div>
                                     </TableCell>
                                 </TableRow>

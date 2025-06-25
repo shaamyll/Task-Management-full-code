@@ -1,4 +1,4 @@
-import AdminSideBar from '@/components/Admin/AdminSideBar';
+import AdminSideBar from '@/components/SideBar';
 import AllUsers from '@/components/Admin/AllUsers';
 import Header from '@/components/Header';
 

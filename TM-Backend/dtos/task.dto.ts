@@ -22,6 +22,12 @@ export class createTaskDTO {
     @IsString()
     status?: string;
 
+}
 
 
+export interface taskFilters {
+  searchTitle?: string;
+  filterStatus?: string;
+  filterStartDate?: string;
+  filterEndDate?:string
 }

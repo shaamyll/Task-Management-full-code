@@ -49,7 +49,7 @@ const CreateUser = () => {
         onSuccess: (res) => {
             toast.success(res.data.message)
             queryClient.invalidateQueries({ queryKey: ["userData"] })
-            console.log(res)
+            // console.log(res)
             reset()
         },
         onError: (err: any) => {

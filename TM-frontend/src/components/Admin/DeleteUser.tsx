@@ -34,7 +34,7 @@ const DeleteUser = ({ user }: { user: any }) => {
         },
         onSuccess: (res: any) => {
             queryClient.invalidateQueries({ queryKey: ["userData"] })
-            console.log(res)
+            // console.log(res)
             toast.success(res.data?.message)
         },
         onError: (data) => {

@@ -38,7 +38,7 @@ const CreateTask = () => {
 
     const { register, reset, handleSubmit } = useForm<taskForm>()
 
-    // const queryClient = useQueryClient(['taskData'])
+    const queryClient = useQueryClient()
 
 
     const { mutate, isPending } = useMutation({
@@ -68,7 +68,7 @@ const CreateTask = () => {
             setEndDate(undefined);
             setStatus('');
             setopen(false);
-            // queryClient.invalidateQueries(["taskData"]);
+            queryClient.invalidateQueries({queryKey:["taskKey"]});
         },
         onError: (err: any) => {
 
@@ -88,7 +88,7 @@ const CreateTask = () => {
         <div>
             <Dialog open={open} onOpenChange={setopen}>
                 <DialogTrigger asChild>
-                    <Button className="bg-green-500 text-white rounded shadow  hover:bg-green-600">+ Create Task</Button>
+                    <Button >+ Create Task</Button>
                 </DialogTrigger>
 
                 <DialogContent className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-md">
@@ -182,7 +182,7 @@ const CreateTask = () => {
                                                 selected={endDate}
                                                 captionLayout="dropdown"
                                                 onSelect={(date) => {
-                                                    setEndDate(date)
+                                                    setEndDate(date);
                                                     setEndOpen(false)
                                                 }}
                                             />

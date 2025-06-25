@@ -18,9 +18,16 @@ class TaskRoutes implements Route {
     }
 
     private initializeRoutes() {
-        this.router.post(`${this.path}/createTask`,authMiddleware,validationMiddleware(createTaskDTO, 'body'),this.taskController.createTask);
+        this.router.post(`${this.path}/createTask`, authMiddleware, validationMiddleware(createTaskDTO, 'body'), this.taskController.createTask);
 
-        this.router.get(`${this.path}/getAllTasks`,authMiddleware,this.taskController.fetchAllTasks);
+        this.router.get(`${this.path}/getAllTasks`, authMiddleware, this.taskController.fetchAllTasks);
+
+        //Delete Task
+        this.router.delete(`/deleteTask/:id`, authMiddleware, this.taskController.deleteTask);
+
+        //Update task
+        this.router.put(`/updateTask/:id`, authMiddleware, this.taskController.updateTask);
+
 
     }
 

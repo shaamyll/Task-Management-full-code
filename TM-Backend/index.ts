@@ -3,6 +3,7 @@ import AuthRoutes from './routes/auth.routes';
 import sequelize from './models';
 import TaskRoutes from './routes/task.routes';
 import cors from 'cors';
+import 'reflect-metadata';
 
 const TMserver = express();
 

@@ -15,6 +15,7 @@ import { useForm } from 'react-hook-form'
 import { loginAPI, registerAPI } from '@/services/AllAPIs'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
+import { Loader2 } from 'lucide-react'
 
 
 type AuthProps = {
@@ -41,9 +42,9 @@ export const Auth: React.FC<AuthProps> = ({ register }) => {
 
   const { mutate, isPending } = useMutation({
     mutationFn,
-    onSuccess: async(res: any) => {
-      
-       console.log(res.data);
+    onSuccess: async (res: any) => {
+
+      console.log(res.data);
       toast.success(res.data.message)
       const email: any = res?.data?.data?.user?.email;
       const token: any = res?.data?.data?.token;
@@ -51,24 +52,26 @@ export const Auth: React.FC<AuthProps> = ({ register }) => {
       localStorage.setItem('token', token);
       localStorage.setItem('userEmail', email);
       localStorage.setItem('username', username);
-      const role:any = res?.data?.data?.user?.role;
+      const role: any = res?.data?.data?.user?.role;
       localStorage.setItem('role', role);
       console.log(role)
 
-       await new Promise((resolve) => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
       if (register) {
         navigate('/');
       } else {
-       if(role === 'user'){
-         navigate('/userDashboard');
-       } else if(role === 'admin'){
-        navigate('/manageUsers')
-       } else {
-        reset()
+        if (role === 'user') {
+          navigate('/userDashboard');
+        } else if (role === 'admin') {
+          navigate('/admin/usersPage')
+        } else if(role === "project_manager"){
+          navigate('/pm/taskPage')
+        } else {
+          reset()
+        }
       }
-      } 
-      
+
     },
     onError: (error: any) => {
       console.error("Registration failed", error)
@@ -111,7 +114,7 @@ export const Auth: React.FC<AuthProps> = ({ register }) => {
                     {...formRegister("username")}
                     placeholder="John Doe"
                     required
-                   
+
                   />
                 </div>
               )
@@ -150,8 +153,16 @@ export const Auth: React.FC<AuthProps> = ({ register }) => {
                 className="bg-gray-100 text-black placeholder-gray-400 border-gray-300 rounded focus:border-black"
               />
             </div>
-            <Button type="submit" className="w-full ">
-              {isPending ? (register ? "Registering..." : "Logging in...") : (register ? "Sign Up" : "Login")}
+            <Button type="submit" className="w-full" disabled={isPending}>
+              {isPending ? (
+                <>
+                  
+                  {register ? "Registering" : "Logging in"}
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                </>
+              ) : (
+                register ? "Sign Up" : "Login"
+              )}
             </Button>
           </form>
         </CardContent>

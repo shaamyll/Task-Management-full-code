@@ -7,6 +7,8 @@ import { toast } from 'sonner'
 function Header() {
   const [email, setEmail] = useState("")
   const [username,setUsername] = useState("")
+    const [role,setRole] = useState("")
+
   const navigate = useNavigate()
 
   const {mutate:logout,isPending} = useMutation({
@@ -27,6 +29,8 @@ function Header() {
     if (storedEmail) setEmail(storedEmail)
         const storedUsername = localStorage.getItem('username')
         if(storedUsername) setUsername(storedUsername)
+          const storedRole = localStorage.getItem('role')
+        if(storedRole) setRole(storedRole)
   }, [])
 
   return (
@@ -34,11 +38,11 @@ function Header() {
   <h1 className="text-2xl font-bold text-gray-800">Task Manager</h1>
 
   <div className="flex items-center gap-4">
-    {/* {email && (
+    {(role === 'user') && (
       <p className="text-sm text-gray-600 font-medium">
         {username} ({email})
       </p>
-    )} */}
+    )}
     <Button variant="destructive" onClick={()=>logout()} disabled={isPending}>
       {
         isPending?"Logging out..":"Log Out"

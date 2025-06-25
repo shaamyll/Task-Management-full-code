@@ -1,4 +1,4 @@
-import { Op, where } from "sequelize";
+import { Op } from "sequelize";
 import { LoginDTO, SignUpDto, UserFilters } from "../dtos/auth.dto";
 import { UserData } from "../interfaces/auth.Interface";
 import { User } from "../models/User"
@@ -42,13 +42,7 @@ class AuthServices {
         return { user: payload, token: `Bearer ${token}` };
     }
 
-    //fetch all users
-    // public async fetchAllUsers(): Promise<UserData[]> {
-    //     return await User.findAll()
-    // }
 
-
-    
  public async fetchAllUsers(filters: UserFilters): Promise<User[]> {
   const where: any = {};
 
@@ -71,7 +65,6 @@ class AuthServices {
     order: [['createdAt', 'DESC']],
   });
 }
-
 
 
     //Delete user
