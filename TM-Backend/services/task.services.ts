@@ -1,6 +1,7 @@
 import { Op } from "sequelize";
 import { createTaskDTO, taskFilters } from "../dtos/task.dto";
 import { Task, TaskAttributes } from "../models/Task";
+import { User } from "../models/User";
 
 
 
@@ -72,6 +73,27 @@ class TaskServices {
 
         return updatedTask;
     }
+
+
+    //Assigned to
+    public async assignTask(taskId: number, assignedTo: number): Promise<TaskAttributes> {
+        // Check if task exists
+        const task = await Task.findByPk(taskId);
+        if (!task) {
+            throw { status: 404, message: "Task not found" };
+        }
+
+        const user = await User.findByPk(assignedTo);
+        if (!user) throw { status: 404, message: "Assigned user does not exist" };
+
+
+        // Update the assignedTo field
+        task.assignedTo = assignedTo;
+        await task.save();
+
+        return task;
+    }
+
 
 
 }

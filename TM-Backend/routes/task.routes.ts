@@ -28,6 +28,10 @@ class TaskRoutes implements Route {
         //Update task
         this.router.put(`/updateTask/:id`, authMiddleware, this.taskController.updateTask);
 
+        //Assign
+        this.router.patch(`${this.path}/assignTask/:taskId`, authMiddleware, this.taskController.assignTask);
+
+
 
     }
 

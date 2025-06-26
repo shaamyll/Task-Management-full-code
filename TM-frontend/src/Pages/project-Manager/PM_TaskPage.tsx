@@ -1,7 +1,6 @@
 import AllTasks from '@/components/Admin/AllTasks';
 import Header from '@/components/Header'
 import AdminSideBar from '@/components/SideBar';
-import React from 'react'
 
 const PM_TaskPage = () => {
   return (

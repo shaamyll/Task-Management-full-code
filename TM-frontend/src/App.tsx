@@ -8,7 +8,7 @@ import ManageUsers from './Pages/Admin/ManageUsers'
 import TaskPage from './Pages/Admin/TaskPage'
 import AdminDashboard from './Pages/Admin/AdminDashboard'
 import PM_TaskPage from './Pages/project-Manager/PM_TaskPage'
-import Assignments from './Pages/project-Manager/Assignments'
+import AssigningPage from './Pages/project-Manager/AssigningPage'
 
 
 function App() {
@@ -27,7 +27,7 @@ function App() {
           <Route path='/admin/taskPage' element={<TaskPage />} />
           {/* Project-manager */}
           <Route path='/pm/taskPage' element={<PM_TaskPage/>} />
-          <Route path='/pm/Assignments' element={<Assignments/>} />
+          <Route path='/pm/Assignments' element={<AssigningPage/>} />
         </Routes>
       </SidebarProvider>
     </>

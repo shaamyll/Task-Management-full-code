@@ -27,15 +27,15 @@ class TaskController {
 
         try {
 
-            const { searchTitle = '', filterStatus = '', filterStartDate = '' , filterEndDate = '' } = req.query as {
+            const { searchTitle = '', filterStatus = '', filterStartDate = '', filterEndDate = '' } = req.query as {
                 searchTitle?: string;
                 filterStatus?: string;
                 filterStartDate?: string;
                 filterEndDate?: string
-            };  
+            };
 
-            
-            const data = await this.taskService.fetchAllTasks( { searchTitle , filterStatus , filterStartDate ,  filterEndDate  });
+
+            const data = await this.taskService.fetchAllTasks({ searchTitle, filterStatus, filterStartDate, filterEndDate });
             res.status(200).json({ message: "All Tasks fetched Successfully", data });
 
         } catch (err: any) {
@@ -60,17 +60,31 @@ class TaskController {
 
 
     //Update user
-       public updateTask = async (req: Request, res: Response , next:NextFunction) => {
-    
-            try {
-                const updatedData = req.body as createTaskDTO
-                const data = await this.taskService.updateTask(req.params.id,updatedData)
-                res.status(200).json({message:"Task Updated Successfully",data});
-    
-            } catch(err:any){
-                res.status(err.status??500).json({message:err.message??"Something went wrong"})
-            }
+    public updateTask = async (req: Request, res: Response, next: NextFunction) => {
+
+        try {
+            const updatedData = req.body as createTaskDTO
+            const data = await this.taskService.updateTask(req.params.id, updatedData)
+            res.status(200).json({ message: "Task Updated Successfully", data });
+
+        } catch (err: any) {
+            res.status(err.status ?? 500).json({ message: err.message ?? "Something went wrong" })
         }
+    }
+
+
+    //Assign Task
+    public assignTask = async (req: Request, res: Response , next:NextFunction) => {
+        const { taskId } = req.params; // ✅ from URL
+        const { assignedTo } = req.body; // ✅ new user ID
+
+        try {
+            const task = await this.taskService.assignTask(Number(taskId), assignedTo);
+             res.status(200).json({message:`Task Assigned successfully`,task});
+        } catch (err:any) {
+             res.status(err.status || 500).json({ message: err.message || "task Assigning failed" });
+        }
+    };
 
 }
 

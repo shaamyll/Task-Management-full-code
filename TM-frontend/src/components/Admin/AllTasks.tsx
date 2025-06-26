@@ -19,10 +19,9 @@ import { Calendar } from "../ui/calendar"
 import { Label } from "../ui/label"
 import React, { useEffect, useState } from "react"
 import CreateTask from "./CreateTask"
-import { useQuery } from "@tanstack/react-query"
-import { getAllTasksAPI } from "@/services/AllAPIs"
 import DeleteTask from "./DeleteTask"
 import UpdateTask from "./UpdateTask"
+import { allTaskHook } from "@/hooks/Task-Hook"
 
 const AllTasks = () => {
 
@@ -43,27 +42,9 @@ const AllTasks = () => {
         filterEndDate: endDateFilter ? endDateFilter.toISOString() : null
     }
 
-    // console.log(filters)
 
-    const { data, isLoading } = useQuery({
-        queryKey: ["taskKey", filters],
-        queryFn: async () => {
-            const token = localStorage.getItem('token')
-            if (!token) {
-                throw new Error('No token found');
-            }
-
-            console.log(filters)
-
-            const header = {
-                Authorization: `${token}`,
-                'Content-Type': 'application/json'
-            }
-            const response = await getAllTasksAPI(filters, header)
-            return response.data
-        },
-        refetchOnWindowFocus: false
-    })
+    //Function fetchAllTask Hook
+    const {data,isLoading} = allTaskHook(filters)
 
     function Reset(): any {
         setSearchTitle('');
@@ -72,7 +53,6 @@ const AllTasks = () => {
         setEndDateFilter(undefined)
 
     }
-
 
     const [userRole, setUserRole] = useState('')
 
@@ -212,10 +192,10 @@ const AllTasks = () => {
             </div>
 
             {/* Table */}
-            <div className="overflow-x-auto mt-6">
-                <Table className="rounded border border-gray-200">
+            <div className="overflow-x-auto mt-6 p-4 border border-gray-200 rounded-md shadow">
+                <Table className="rounded  ">
                     <TableHeader>
-                        <TableRow className="border border-gray-300 rounded ">
+                        <TableRow className=" rounded ">
                             <TableHead className="w-12 px-6 py-4">#</TableHead>
                             <TableHead className="px-6 py-4">Title</TableHead>
                             <TableHead className="px-6 py-4">Description</TableHead>

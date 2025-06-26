@@ -16,12 +16,11 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { Loader2 } from "lucide-react";
-import { fetchAllUsersAPI } from '@/services/AllAPIs';
-import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import DeleteUser from './DeleteUser';
 import CreateUser from './CreateUser';
 import UpdateUser from './UpdateUser';
+import { allUsersHook } from '@/hooks/AllUsers-Hook';
 
     
 
@@ -37,25 +36,9 @@ function AllUsers() {
                 role: selectedRole
             };
 
-    //fetch all users
-    const { data, isLoading } = useQuery({
-        queryKey: ["userData",filters],
-        queryFn: async () => {
-            const token = localStorage.getItem('token')
-            if (!token) {
-                throw new Error('No token found');
-            }
-            console.log(filters)
-
-            const header = {
-                Authorization: `${token}`,
-                'Content-Type': 'application/json'
-            }
-            const response = await fetchAllUsersAPI(filters, header)
-            return response.data
-        },
-        refetchOnWindowFocus: false
-    })
+    
+    //Fetch users
+    const {isLoading,data} = allUsersHook(filters)
 
     function Reset():any{
         setSearchEmail('');
