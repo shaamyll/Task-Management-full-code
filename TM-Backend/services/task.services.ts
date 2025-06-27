@@ -95,6 +95,22 @@ class TaskServices {
     }
 
 
+    //Remove Assigment
+    public async removeAssignment(taskId: number): Promise<TaskAttributes> {
+    const task = await Task.findByPk(taskId);
+
+    if (!task) {
+        throw { status: 404, message: "Task not found" };
+    }
+
+    task.assignedTo = null;
+    await task.save();
+
+    return task;
+}
+
+
+//Developer Tasks
 
 }
 

@@ -63,3 +63,13 @@ export const updateTaskAPI   = async (taskId:any,reqBody: any,reqHeader:any) => 
 }
 
 
+//Assign task API
+export const assignTaskAPI   = async (taskId:number,userId: number,reqHeader:any) => {
+    return await commonAPI('patch', `${serverURL}/api/task/assignTask/${taskId}`,{ assignedTo:userId },reqHeader)
+}
+
+
+//Remove Assignments
+export const removeAssignmentAPI = (taskId: number, headers: any) => {
+  return commonAPI('patch', `${serverURL}/api/task/removeAssignment/${taskId}`, {}, headers);
+};

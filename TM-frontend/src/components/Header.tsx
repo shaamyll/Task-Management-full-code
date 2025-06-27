@@ -38,7 +38,7 @@ function Header() {
   <h1 className="text-2xl font-bold text-gray-800">Task Manager</h1>
 
   <div className="flex items-center gap-4">
-    {(role === 'user') && (
+    {(role !== 'admin' && role!== "project_manager") && (
       <p className="text-sm text-gray-600 font-medium">
         {username} ({email})
       </p>

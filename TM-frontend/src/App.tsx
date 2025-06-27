@@ -9,6 +9,7 @@ import TaskPage from './Pages/Admin/TaskPage'
 import AdminDashboard from './Pages/Admin/AdminDashboard'
 import PM_TaskPage from './Pages/project-Manager/PM_TaskPage'
 import AssigningPage from './Pages/project-Manager/AssigningPage'
+import DeveloperDashboard from './Pages/Developer/DeveloperDashboard'
 
 
 function App() {
@@ -28,6 +29,8 @@ function App() {
           {/* Project-manager */}
           <Route path='/pm/taskPage' element={<PM_TaskPage/>} />
           <Route path='/pm/Assignments' element={<AssigningPage/>} />
+          {/* Developer */}
+          <Route path='/dev/dashboard' element={<DeveloperDashboard/>}/>
         </Routes>
       </SidebarProvider>
     </>

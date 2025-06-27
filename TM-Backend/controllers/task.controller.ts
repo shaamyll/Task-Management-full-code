@@ -75,8 +75,8 @@ class TaskController {
 
     //Assign Task
     public assignTask = async (req: Request, res: Response , next:NextFunction) => {
-        const { taskId } = req.params; // ✅ from URL
-        const { assignedTo } = req.body; // ✅ new user ID
+        const { taskId } = req.params; 
+        const { assignedTo } = req.body; 
 
         try {
             const task = await this.taskService.assignTask(Number(taskId), assignedTo);
@@ -84,7 +84,27 @@ class TaskController {
         } catch (err:any) {
              res.status(err.status || 500).json({ message: err.message || "task Assigning failed" });
         }
-    };
+    };  
+
+    
+    //Remove Assignment
+    public removeAssignment = async (req: Request, res: Response, next: NextFunction):Promise<void> => {
+    const taskId = req.params.taskId;
+
+    if (!taskId) {
+         res.status(400).json({ message: "Task ID is required" });
+    }
+
+    try {
+        const task = await this.taskService.removeAssignment(Number(taskId));
+        res.status(200).json({
+            message: "Assignment removed successfully",
+            task
+        });
+    } catch (err: any) {
+        res.status(err.status ?? 500).json({ message: err.message ?? "Failed to remove assignment" });
+    }
+};
 
 }
 

@@ -31,6 +31,8 @@ class TaskRoutes implements Route {
         //Assign
         this.router.patch(`${this.path}/assignTask/:taskId`, authMiddleware, this.taskController.assignTask);
 
+        //Remove Assignment
+        this.router.patch(`${this.path}/removeAssignment/:taskId`, authMiddleware, this.taskController.removeAssignment);
 
 
     }

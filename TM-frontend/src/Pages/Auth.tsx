@@ -49,6 +49,8 @@ export const Auth: React.FC<AuthProps> = ({ register }) => {
       const email: any = res?.data?.data?.user?.email;
       const token: any = res?.data?.data?.token;
       const username: any = res?.data?.data?.user?.username;
+      const userId: any = res?.data?.data?.user?.id;
+      localStorage.setItem('userId', userId);
       localStorage.setItem('token', token);
       localStorage.setItem('userEmail', email);
       localStorage.setItem('username', username);
@@ -67,7 +69,9 @@ export const Auth: React.FC<AuthProps> = ({ register }) => {
           navigate('/admin/usersPage')
         } else if(role === "project_manager"){
           navigate('/pm/taskPage')
-        } else {
+        }  else if(role === "developer"){
+          navigate('/dev/dashboard')
+        }else {
           reset()
         }
       }
