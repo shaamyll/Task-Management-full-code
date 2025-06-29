@@ -1,0 +1,51 @@
+import { NextFunction, Request, Response } from "express";
+import { CommentService } from "../services/comment.service";
+
+class CommentController {
+  public commentService = new CommentService();
+
+  public createComment = async (req: Request, res: Response ) => {
+    try {
+      const userId = req.user?.id;
+      const { content } = req.body;
+      const taskId = parseInt(req.params.taskId);
+
+      if (!userId || !content || isNaN(taskId)) {
+         res.status(400).json({ message: "Missing or invalid required fields" });
+      }
+
+      const comment = await this.commentService.createComment({
+        content,
+        taskId,
+        userId,
+      });
+
+       res.status(201).json({
+        message: "Comment added successfully",
+        comment,
+      });
+    } catch (err: any) {
+       res.status(500).json({ message: err.message });
+    }
+  };
+
+
+
+
+     public deleteComment = async (req: Request, res: Response ) => {
+
+        try {
+            const data = await this.commentService.deleteComment(
+                req.params.commentId as unknown as number,
+            );
+            res.status(201).json({message:"Comment Deleted Successfully",data});
+
+        } catch(err:any){
+            res.status(err.status??500).json({message:err.message})
+        }
+    }
+
+
+}
+
+export default CommentController;

@@ -71,7 +71,9 @@ export const Auth: React.FC<AuthProps> = ({ register }) => {
           navigate('/pm/taskPage')
         }  else if(role === "developer"){
           navigate('/dev/dashboard')
-        }else {
+        }else if(role === "tester"){
+          navigate('/tester/dashboard')
+        }  else {
           reset()
         }
       }

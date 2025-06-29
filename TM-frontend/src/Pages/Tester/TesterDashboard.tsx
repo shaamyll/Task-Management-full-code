@@ -1,7 +1,8 @@
 import Header from '@/components/Header'
-import DeveloperTaskCard from '@/Pages/Developer/DeveloperTaskCard'
+import TaskCard from '@/components/TaskCard'
 
-const DeveloperDashboard = () => {
+
+const TesterDashboard = () => {
   return (
     <div className="w-full min-h-screen bg-gray-50 text-gray-800 border border-black">
       <Header />
@@ -10,16 +11,16 @@ const DeveloperDashboard = () => {
         <div>
           <h1 className="text-3xl font-semibold">Tasks</h1>
           <p className="text-gray-600">
-            Developers can update status and comment on their tasks.
+            Tester can update status and comment on their tasks.
           </p>
         </div>
       </div>
 
       <div>
-        <DeveloperTaskCard/>
+        <TaskCard />
       </div>
     </div>
   )
 }
 
-export default DeveloperDashboard
+export default TesterDashboard

@@ -31,21 +31,12 @@ Comment.init(
     content: {
       type: DataTypes.TEXT,
       allowNull: false,
-      validate: {
-        notEmpty: {
-          msg: 'Comment content cannot be empty',
-        },
-        len: {
-          args: [1, 2000],
-          msg: 'Comment must be between 1 and 2000 characters',
-        },
-      },
     },
     taskId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'projects',
+        model: 'Tasks',
         key: 'id',
       },
       onDelete: 'CASCADE',
@@ -54,7 +45,7 @@ Comment.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'users',
+        model: 'Users',
         key: 'id',
       },
       onDelete: 'CASCADE',
@@ -75,3 +66,4 @@ Comment.belongsTo(Task, { foreignKey: 'taskId' });
 
 User.hasMany(Comment, { foreignKey: 'userId' });
 Comment.belongsTo(User, { foreignKey: 'userId' });
+

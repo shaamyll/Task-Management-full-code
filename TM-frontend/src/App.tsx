@@ -10,6 +10,7 @@ import AdminDashboard from './Pages/Admin/AdminDashboard'
 import PM_TaskPage from './Pages/project-Manager/PM_TaskPage'
 import AssigningPage from './Pages/project-Manager/AssigningPage'
 import DeveloperDashboard from './Pages/Developer/DeveloperDashboard'
+import TesterDashboard from './Pages/Tester/TesterDashboard'
 
 
 function App() {
@@ -31,6 +32,8 @@ function App() {
           <Route path='/pm/Assignments' element={<AssigningPage/>} />
           {/* Developer */}
           <Route path='/dev/dashboard' element={<DeveloperDashboard/>}/>
+          {/* Tester */}
+          <Route path='/tester/dashboard' element={<TesterDashboard/>}/>
         </Routes>
       </SidebarProvider>
     </>

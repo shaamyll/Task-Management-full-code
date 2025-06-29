@@ -73,3 +73,30 @@ export const assignTaskAPI   = async (taskId:number,userId: number,reqHeader:any
 export const removeAssignmentAPI = (taskId: number, headers: any) => {
   return commonAPI('patch', `${serverURL}/api/task/removeAssignment/${taskId}`, {}, headers);
 };
+
+
+//fetch All Assigmnets
+export const fetchAllAssignments = ( filters:any,reqHeader: any) => {
+      const query = new URLSearchParams(filters).toString();
+  return commonAPI('get', `${serverURL}/api/task/assignments?${query}`,null, reqHeader);
+};
+
+
+//fetch developers Assigmnets
+export const fetchdeveloperTasksAPI = ( filters: any,reqHeader: any) => {
+  const query = new URLSearchParams(filters).toString();
+  return commonAPI('get', `${serverURL}/api/task/developersTasks?${query}`, null, reqHeader);
+};
+
+
+
+//Add comment API
+export const addCommentAPI   = async (taskId:number,content: any,reqHeader:any) => {
+    return await commonAPI('post', `${serverURL}/api/comment/create/${taskId}`, {content},reqHeader)
+}
+
+
+//delete comment API
+export const deleteCommentAPI   = async (commentId:number,reqHeader:any) => {
+    return await commonAPI('delete', `${serverURL}/api/comment/delete/${commentId}`, null, reqHeader)
+}

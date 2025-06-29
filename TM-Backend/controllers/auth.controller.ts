@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { LoginDTO, SignUpDto, UserFilters } from '../dtos/auth.dto';
+import { LoginDTO, SignUpDto } from '../dtos/auth.dto';
 import AuthServices from '../services/auth.services';
 
 class AuthController {
@@ -30,16 +30,6 @@ class AuthController {
         }
     }
 
-    //  public fetchAllUsers = async (req: Request, res: Response , next:NextFunction) => {
-
-    //     try {
-    //         const data = await this.authService.fetchAllUsers();
-    //         res.status(201).json({message:"All users data fetched Successfully",data});
-
-    //     } catch(err:any){
-    //         res.status(err.status??500).json({message:err.message??"Something went wrong"})
-    //     }
-    // }
 
 public fetchAllUsers = async (req: Request, res: Response, next: NextFunction) => {
   try {

@@ -74,37 +74,85 @@ class TaskController {
 
 
     //Assign Task
-    public assignTask = async (req: Request, res: Response , next:NextFunction) => {
-        const { taskId } = req.params; 
-        const { assignedTo } = req.body; 
+    public assignTask = async (req: Request, res: Response, next: NextFunction) => {
+        const { taskId } = req.params;
+        const { assignedTo } = req.body;
 
         try {
             const task = await this.taskService.assignTask(Number(taskId), assignedTo);
-             res.status(200).json({message:`Task Assigned successfully`,task});
-        } catch (err:any) {
-             res.status(err.status || 500).json({ message: err.message || "task Assigning failed" });
+            res.status(200).json({ message: `Task Assigned successfully`, task });
+        } catch (err: any) {
+            res.status(err.status || 500).json({ message: err.message || "task Assigning failed" });
         }
-    };  
+    };
 
-    
+
     //Remove Assignment
-    public removeAssignment = async (req: Request, res: Response, next: NextFunction):Promise<void> => {
-    const taskId = req.params.taskId;
+    public removeAssignment = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const taskId = req.params.taskId;
 
-    if (!taskId) {
-         res.status(400).json({ message: "Task ID is required" });
-    }
+        if (!taskId) {
+            res.status(400).json({ message: "Task ID is required" });
+        }
 
-    try {
-        const task = await this.taskService.removeAssignment(Number(taskId));
-        res.status(200).json({
-            message: "Assignment removed successfully",
-            task
-        });
-    } catch (err: any) {
-        res.status(err.status ?? 500).json({ message: err.message ?? "Failed to remove assignment" });
-    }
+        try {
+            const task = await this.taskService.removeAssignment(Number(taskId));
+            res.status(200).json({
+                message: "Assignment removed successfully",
+                task
+            });
+        } catch (err: any) {
+            res.status(err.status ?? 500).json({ message: err.message ?? "Failed to remove assignment" });
+        }
+    };
+
+
+    //Assigned Tasks
+    // Get All Assigned Tasks
+public getAssignedTasks = async (req: Request, res: Response) => {
+  try {
+    const { searchTitle = '', filterStatus = '' } = req.query as {
+      searchTitle?: string;
+      filterStatus?: string;
+    };
+
+    const filters = { searchTitle, filterStatus };
+    const tasks = await this.taskService.getAssignedTasks(filters);
+
+    res.status(200).json({
+      message: "Assigned tasks fetched successfully",
+      tasks,
+    });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
 };
+
+
+// Get Developer's Assigned Tasks
+public getDevelopersTasks = async (req: Request, res: Response) => {
+  try {
+    const userId = req.user?.id;
+
+    const { searchTitle = '', filterStatus = '' } = req.query as {
+      searchTitle?: string;
+      filterStatus?: string;
+    };
+
+    const filters = { searchTitle, filterStatus };
+
+    const tasks = await this.taskService.getDevelopersTasks(userId, filters);
+
+    res.status(200).json({
+      message: "Developers tasks fetched successfully",
+      tasks,
+    });
+
+  } catch (err: any) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
 
 }
 

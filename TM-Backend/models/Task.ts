@@ -1,7 +1,7 @@
 import { Model, DataTypes, Optional } from 'sequelize';
 import sequelize from './index'
 import { User } from './User';
-
+import { Comment } from './Comment';
 
 
 
@@ -13,7 +13,7 @@ export interface TaskAttributes {
 
     title: string;
     description: string;
-    status?: string; // Optional field for task status
+    status?: string; 
 
     startDate: Date | null;
     endDate: Date | null;
@@ -33,7 +33,7 @@ export class Task extends Model<TaskAttributes,TaskInput> implements TaskAttribu
 
     public title!: string;
     public description!: string;
-    public status?: string; // Optional field for task status
+    public status?: string; 
 
     public startDate!: Date | null;
     public endDate!: Date | null;
@@ -71,20 +71,20 @@ Task.init({
   status: {
     type: DataTypes.STRING,
     allowNull: false,
-    defaultValue: 'planning' // ✅ new field added
+    defaultValue: 'planning' 
   },
     startDate: {
         type: DataTypes.DATE,
-        allowNull: true // Allow null for tasks that don't have a start date
+        allowNull: true 
     },
     endDate: {
         type: DataTypes.DATE,
-        allowNull: true // Allow null for tasks that don't have an end date
+        allowNull: true 
     },
 }, {
     timestamps: true,
     sequelize: sequelize,
-    paranoid: true // This will be set in the index file where the Sequelize instance is created
+    paranoid: true 
 })
 
 
@@ -95,3 +95,4 @@ Task.belongsTo(User, { foreignKey: 'userId' })
 //Assigned to
 User.hasMany(Task, { foreignKey: 'assignedTo', as: 'assignedTasks' });
 Task.belongsTo(User, { foreignKey: 'assignedTo', as: 'assignee' });
+

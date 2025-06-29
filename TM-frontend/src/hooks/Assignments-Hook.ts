@@ -1,5 +1,5 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { assignTaskAPI, removeAssignmentAPI } from '@/services/AllAPIs';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { assignTaskAPI, fetchAllAssignments, fetchdeveloperTasksAPI, removeAssignmentAPI } from '@/services/AllAPIs';
 
 type AssignPayload = {
   taskId: number;
@@ -64,5 +64,52 @@ export const useRemoveAssignment = () => {
 
 
 
+//getAllAssignmrnts
+export const fetchAllAssignmentsHook = (filters: any) => {
+  return useQuery({
+    queryKey: ['taskKey', filters],
+    queryFn: async ({ queryKey }) => {
+      const [, filters] = queryKey; // destructure filters from queryKey
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No token found');
+      }
 
+      const headers = {
+        Authorization: `${token}`,
+        'Content-Type': 'application/json',
+      };
+
+      const response = await fetchAllAssignments(filters,headers);
+      return response.data;
+    },
+    refetchOnWindowFocus: false,
+  });
+};
+
+
+
+
+//fetch developers Tasks
+export const fetchDevelopersTasksHook = (filters: any) => {
+  return useQuery({
+    queryKey: ['taskKey', filters],
+    queryFn: async ({queryKey}) => {
+      const [, filters] = queryKey;
+      const token = localStorage.getItem('token');
+      if (!token) throw new Error('No token found');
+
+      const headers = {
+        Authorization: `${token}`,
+        'Content-Type': 'application/json',
+      };
+
+   
+
+      const response = await fetchdeveloperTasksAPI(filters, headers);
+      return response.data;
+    },
+    refetchOnWindowFocus: false,
+  });
+};
 

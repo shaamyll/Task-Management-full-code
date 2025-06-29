@@ -11,18 +11,14 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-
-
 import { Controller, useForm } from "react-hook-form"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { updateTaskAPI } from "@/services/AllAPIs"
-import { toast } from "sonner"
 import { useEffect, useState } from "react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 import { ChevronDownIcon, SquarePen } from "lucide-react"
 import React from "react"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 import { Calendar } from "../ui/calendar"
+import { useUpdateTask } from "@/hooks/AllTask-Hook"
 
 type TaskForm = {
     title: string,
@@ -35,7 +31,7 @@ const UpdateTask = ({ task }: { task: any }) => {
 
     const [startOpen, setStartOpen] = React.useState(false)
     const [endOpen, setEndOpen] = React.useState(false)
-    
+
     const [startDate, setStartDate] = React.useState<Date>(new Date())
     const [endDate, setEndDate] = React.useState<Date | undefined>()
     const [open, setopen] = useState(false)
@@ -49,47 +45,23 @@ const UpdateTask = ({ task }: { task: any }) => {
         }
     })
 
-    const queryClient = useQueryClient()
-
-
-    const { mutate, isPending } = useMutation({
-        mutationFn: async (data: any) => {
-            const token = localStorage.getItem("token")
-            if (!token) throw new Error("Token missing")
-            const headers = {
-                Authorization: `${token}`,
-                "Content-Type": "application/json"
-            }
-
-            const body = {
-                ...data,
-                startDate: startDate?.toISOString(),
-                endDate: endDate?.toISOString() || null,
-            };
-            console.log(body)
-
-            const response = await updateTaskAPI(task.id, body, headers)
-            return response
+    const { mutate, isPending } = useUpdateTask({
+        taskId: task.id,
+        onSuccess: () => {
+            reset()
+            setStartDate(new Date())
+            setEndDate(undefined)
+            setopen(false)
         },
-        onSuccess: (res) => {
-             toast.success(res.data.message)
-            console.log(res)
-            reset();
-            setStartDate(new Date());
-            setEndDate(undefined);
-            setopen(false);
-            queryClient.invalidateQueries({ queryKey: ["taskKey"] });
-        },
-        onError: (err: any) => {
-            console.error(err.response?.data?.message || "Failed to create Task")
-        }
     })
 
 
     const onSubmit = (data: TaskForm) => {
-        console.log("Form submit Triggered", data)
-        mutate(data)
-
+        mutate({
+            ...data,
+            startDate,
+            endDate,
+        })
     }
 
     useEffect(() => {

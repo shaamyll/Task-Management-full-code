@@ -2,6 +2,7 @@ import { Op } from "sequelize";
 import { createTaskDTO, taskFilters } from "../dtos/task.dto";
 import { Task, TaskAttributes } from "../models/Task";
 import { User } from "../models/User";
+import {Comment} from "../models/Comment";
 
 
 
@@ -97,6 +98,7 @@ class TaskServices {
 
     //Remove Assigment
     public async removeAssignment(taskId: number): Promise<TaskAttributes> {
+        
     const task = await Task.findByPk(taskId);
 
     if (!task) {
@@ -110,7 +112,83 @@ class TaskServices {
 }
 
 
-//Developer Tasks
+//Assigned Tasks
+public async getAssignedTasks(filters:any): Promise<TaskAttributes[]> {
+    const where: any = {
+   assignedTo: {
+        [Op.not]: null,
+      } // filter by assigned developer
+  };
+
+  if (filters.searchTitle) {
+    where.title = { [Op.iLike]: `%${filters.searchTitle}%` };
+  }
+
+  if (filters.filterStatus) {
+    where.status = { [Op.iLike]: `%${filters.filterStatus}%` };
+  }
+  const tasks = await Task.findAll({
+    where,
+    include: [
+      {
+        model: User,
+        as: 'assignee',
+        attributes: ['id', 'username', 'email', 'role'], // user info
+      },
+      {
+        model: Comment,
+        attributes: ['id', 'content', 'taskId', 'userId', 'createdAt'],
+        include: [
+          {
+            model: User,
+            attributes: ['id', 'username'],
+          },
+        ],
+      },
+    ],
+    order: [['createdAt', 'DESC']],
+  });
+
+  return tasks;
+}
+
+//get developer Tasks
+public async getDevelopersTasks(userId: number, filters: any): Promise<TaskAttributes[]> {
+  const where: any = {
+    assignedTo: userId, // filter by assigned developer
+  };
+
+  if (filters.searchTitle) {
+    where.title = { [Op.iLike]: `%${filters.searchTitle}%` };
+  }
+
+  if (filters.filterStatus) {
+    where.status = { [Op.iLike]: `%${filters.filterStatus}%` };
+  }
+
+  const tasks = await Task.findAll({
+    where,
+    include: [
+      {
+        model: Comment,
+        attributes: ['id', 'content', 'taskId', 'userId', 'createdAt'],
+        include: [
+          {
+            model: User,
+            attributes: ['id', 'username'],
+          },
+        ],
+      },
+    ],
+    order: [['createdAt', 'DESC']],
+  });
+
+  return tasks;
+}
+
+
+
+
 
 }
 
