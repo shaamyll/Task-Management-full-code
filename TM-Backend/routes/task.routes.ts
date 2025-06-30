@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import Route from '../interfaces/route.interface';
+import Route from '../types/route.interface';
 import validationMiddleware from '../middlewares/validation.middleware';
 import { createTaskDTO } from '../dtos/task.dto';
 import TaskController from '../controllers/task.controller';

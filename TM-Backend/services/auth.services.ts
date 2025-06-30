@@ -1,6 +1,6 @@
 import { Op } from "sequelize";
 import { LoginDTO, SignUpDto, UserFilters } from "../dtos/auth.dto";
-import { UserData } from "../interfaces/auth.Interface";
+import { UserData } from "../types/auth.Interface";
 import { User } from "../models/User"
 import jwt from "jsonwebtoken";
 

@@ -9,7 +9,6 @@ export class createTaskDTO {
     @IsString()
     description: string;
 
-
     @IsOptional()
     @IsDateString()
     startDate?: string;

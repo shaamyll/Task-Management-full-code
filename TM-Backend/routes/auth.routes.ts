@@ -1,5 +1,5 @@
-import { Router, Request, Response } from 'express';
-import Route from '../interfaces/route.interface';
+import { Router } from 'express';
+import Route from '../types/route.interface';
 import AuthController from '../controllers/auth.controller'
 import validationMiddleware from '../middlewares/validation.middleware';
 import { SignUpDto, LoginDTO } from '../dtos/auth.dto';

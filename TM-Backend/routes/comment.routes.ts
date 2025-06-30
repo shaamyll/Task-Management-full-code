@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import CommentController from '../controllers/comment.controller'
 import authMiddleware from '../middlewares/authentication.middleware'
-import Route from '../interfaces/route.interface'
+import Route from '../types/route.interface'
 
 
 class commentRoutes implements Route {
