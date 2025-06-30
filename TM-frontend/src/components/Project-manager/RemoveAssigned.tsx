@@ -1,6 +1,6 @@
 import { Button } from '../ui/button'
 import { toast } from 'sonner';
-import { useRemoveAssignment } from '@/hooks/Assignments-Hook';
+import { useRemoveAssignment } from '@/hooks/use-Assignments-Hook';
 import {
     AlertDialog,
     AlertDialogAction,

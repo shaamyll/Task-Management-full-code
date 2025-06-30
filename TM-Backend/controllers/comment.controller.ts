@@ -37,24 +37,22 @@ class CommentController {
 
 
 
-  public deleteComment = async (req: Request, res: Response) => {
-
-    try {
-
-      const commentId = req.params.commentId;
-      const data = await this.commentService.deleteComment(
-        commentId as unknown as number,
-      );
-
-      //Clear cache
-      await clearTaskCache(data.taskId);
-
-      res.status(201).json({ message: "Comment Deleted Successfully", data });
-
-    } catch (err: any) {
-      res.status(err.status ?? 500).json({ message: err.message })
+public deleteComment = async (req: Request, res: Response) => {
+  try {
+    const commentId = parseInt(req.params.commentId);
+    if (isNaN(commentId)) {
+       res.status(400).json({ message: "Invalid comment ID" });
     }
+
+    const { taskId } = await this.commentService.deleteComment(commentId);
+
+    await clearTaskCache(taskId);
+
+    res.status(201).json({ message: "Comment Deleted Successfully" });
+  } catch (err: any) {
+    res.status(err.status ?? 500).json({ message: err.message });
   }
+};
 
 
 }

@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Button } from '@/components/ui/button'
 
 import CommentSection from '@/components/CommentSection'
-import { fetchAllAssignmentsHook } from '@/hooks/Assignments-Hook'
+import { fetchAllAssignmentsHook } from '@/hooks/use-Assignments-Hook'
 
 const TaskCard = () => {
   const [searchTitle, setSearchTitle] = useState<string | undefined>('')

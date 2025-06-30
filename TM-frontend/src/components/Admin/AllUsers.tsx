@@ -20,7 +20,7 @@ import { useState } from 'react';
 import DeleteUser from './DeleteUser';
 import CreateUser from './CreateUser';
 import UpdateUser from './UpdateUser';
-import { allUsersHook } from '@/hooks/AllUsers-Hook';
+import { allUsersHook } from '@/hooks/use-Users-Hook';
 
     
 

@@ -112,6 +112,7 @@ class TaskController {
 
             //clear cache
             await clearTaskCache(Number(taskId));
+
             res.status(200).json({
                 message: "Assignment removed successfully",
                 task
@@ -177,7 +178,7 @@ class TaskController {
             const filters = { searchTitle, filterStatus };
 
             //cache Key
-            const cacheKey = `tasks:assigned:${userId}:${searchTitle}:${filterStatus}`;
+            const cacheKey = `tasks:developer:${userId}:${searchTitle}:${filterStatus}`;
 
             // Try Redis first
             const cached = await redis.get(cacheKey);

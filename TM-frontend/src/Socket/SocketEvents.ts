@@ -1,10 +1,10 @@
 import  socket  from './socket';
 
-export const emitStatusUpdate = (taskId: number, status: string) => {
+export const emitStatusUpdate = (taskId: number, status: string ) => {
   socket.emit('statusUpdate', { taskId, status });
 };
 
-export const emitNewComment = (taskId: number, comment: any) => {
+export const emitNewComment = (taskId: number, comment: any ) => {
   socket.emit('newComment', { taskId, comment });
 };
 

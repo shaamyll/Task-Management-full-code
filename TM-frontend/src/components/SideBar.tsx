@@ -32,13 +32,13 @@ function SideBar() {
             </div>
             <SidebarGroupContent>
 
-              <a
+              {/* <a
                 href="/admin/dashboard"
                 className="flex items-center gap-3 px-4 py-4 text-gray-700 text-base font-medium rounded transition hover:bg-gray-200 "
               >
                 <LayoutDashboard />
                 Dashboard
-              </a>
+              </a> */}
               {
                 (role === 'admin') &&
                 (<a

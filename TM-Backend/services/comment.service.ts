@@ -20,12 +20,12 @@ export class CommentService {
       public async deleteComment(id:number): Promise<{taskId:number}> {
           const comment = await Comment.findOne({where : {id}})
           if(!comment){
-              throw{ status:404 , message:"User not found"}
+              throw{ status:404 , message:"comment not found"}
           }
 
           const taskId = comment.taskId;
   
-          const deleteUser = await Comment.destroy({where:{id}})
+          await Comment.destroy({where:{id}})
           return {taskId}
       }
 

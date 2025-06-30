@@ -18,44 +18,36 @@ export const createSocketServer = (app: Express) => {
   io.on('connection', (socket) => {
     console.log('User connected:', socket.id);
 
-    socket.on('joinTaskRoom', (taskId) => {
-      socket.join(`task-${taskId}`);
-    });
-
+    // Register user to rooms
     socket.on('registerUser', (userId) => {
       socket.join(`user-${userId}`);
-      socket.join('global-status-room'); //room
+      socket.join('global-status-room');
     });
 
-    //Comment
-    socket.on('newComment', async({ taskId, comment }) => {
+    // Handle new comment
+    
+    socket.on('newComment', async ({ taskId, comment }) => {
       io.to(`task-${taskId}`).emit('receiveComment', comment);
 
-      // Fetch task title
-      const title = await Task.findByPk(taskId, { attributes: ['title'] });
+      const task = await Task.findByPk(taskId, { attributes: ['title'] });
+      const message = task && `New comment "${comment.content}" on task ${task.title}`
+ 
 
-
-      const message = `New comment "${comment.content}" on Task #${title}`;
       io.to('global-status-room').emit('receiveCommentNotification', { message });
     });
 
+    // Handle status update
     socket.on('statusUpdate', ({ taskId, status }) => {
       io.to('global-status-room').emit('receiveStatusUpdate', {
         taskId,
         status,
-        message: `Task #${taskId} is  "${status}"`
+        message: `Task #${taskId} is "${status}"`,
       });
-    });
-
-    socket.off('sendNotification', ({ userId, message }) => {
-      io.to(`user-${userId}`).emit('notification', { message });
     });
 
     socket.on('disconnect', () => {
       console.log('User disconnected:', socket.id);
     });
-
-
   });
 
   return httpServer;

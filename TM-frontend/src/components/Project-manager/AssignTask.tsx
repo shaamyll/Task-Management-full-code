@@ -1,6 +1,6 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 import { Button } from '../ui/button'
-import { allUsersHook } from '@/hooks/AllUsers-Hook'
+import { allUsersHook } from '@/hooks/use-Users-Hook'
 import {
   Table,
   TableBody,
@@ -10,9 +10,9 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Loader2 } from "lucide-react"
-import { allTaskHook } from "@/hooks/AllTask-Hook"
+import { allTaskHook } from "@/hooks/use-Task-Hook"
 import { useState } from "react"
-import { fetchAllAssignmentsHook, useAssignTask } from "@/hooks/Assignments-Hook"
+import { fetchAllAssignmentsHook, useAssignTask } from "@/hooks/use-Assignments-Hook"
 import { toast } from "sonner"
 import RemoveAssigned from "./RemoveAssigned"
 

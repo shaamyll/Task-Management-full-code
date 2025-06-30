@@ -21,7 +21,7 @@ import React, { useEffect, useState } from "react"
 import CreateTask from "./CreateTask"
 import DeleteTask from "./DeleteTask"
 import UpdateTask from "./UpdateTask"
-import { allTaskHook } from "@/hooks/AllTask-Hook"
+import { allTaskHook } from "@/hooks/use-Task-Hook"
 
 const AllTasks = () => {
 

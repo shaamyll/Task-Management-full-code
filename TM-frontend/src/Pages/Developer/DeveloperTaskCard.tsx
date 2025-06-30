@@ -4,7 +4,7 @@ import {  useState } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
-import { fetchDevelopersTasksHook } from '@/hooks/Assignments-Hook'
+import { fetchDevelopersTasksHook } from '@/hooks/use-Assignments-Hook'
 import UpdateStatus from './UpdateStatus'
 import CommentSection from '@/components/CommentSection'
 
@@ -52,7 +52,7 @@ const DeveloperTaskCard = () => {
       </Select>
 
       {(statusFilter || searchTitle) && (
-        <Button variant="outline" onClick={Reset}>
+        <Button onClick={Reset}>
           Reset
         </Button>
       )}
@@ -104,9 +104,7 @@ const DeveloperTaskCard = () => {
                 </div>
 
                 <div className="flex justify-between items-center">
-                  {/* <a href="#" className="text-sm text-blue-500 hover:underline">
-                    View Details
-                  </a> */}
+              
                   {
                     (role === 'developer') && (
                         <UpdateStatus task={task} />

@@ -1,4 +1,4 @@
-import { useDeleteComment } from '@/hooks/Comment-Hook'
+import { useDeleteComment } from '@/hooks/use-Comment-Hook'
 import {
   AlertDialog,
   AlertDialogAction,

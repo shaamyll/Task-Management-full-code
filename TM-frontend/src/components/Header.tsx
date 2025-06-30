@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuLabel,
 } from '@/components/ui/dropdown-menu'
+import { playNotificationSound } from '@/Socket/NotificationSound'
 
 function Header() {
   const [email, setEmail] = useState("")
@@ -55,13 +56,13 @@ function Header() {
     socket.on('receiveStatusUpdate', ({ message }) => {
       setNotificationCount((prev) => prev + 1)
       setNotifications((prev) => [message, ...prev])
-      toast.info(message)
+      playNotificationSound()
     })
 
     socket.on('receiveCommentNotification', ({ message }) => {
       setNotificationCount((prev) => prev + 1);
       setNotifications((prev) => [message, ...prev]);
-      toast.info(message);
+      playNotificationSound()
     });
 
 
@@ -79,11 +80,19 @@ function Header() {
 
       <div className="flex items-center gap-4">
         {/* Notification Dropdown */}
-        <DropdownMenu>
+        <DropdownMenu  onOpenChange={(open)=>{
+          if(open) {
+            setNotificationCount(0)
+          }
+        }}>
           <DropdownMenuTrigger asChild>
             <button className="relative focus:outline-none">
               <BellDot className="w-6 h-6 text-gray-800" />
-              {notificationCount > 0 && (
+              {notificationCount <= 0 ? (
+                <span className="absolute -top-1 -right-1 w-4 h-4 text-[10px] bg-red-600 text-white rounded-full flex items-center justify-center">
+                  0
+                </span> 
+              ) : (
                 <span className="absolute -top-1 -right-1 w-4 h-4 text-[10px] bg-red-600 text-white rounded-full flex items-center justify-center">
                   {notificationCount}
                 </span>
@@ -91,7 +100,7 @@ function Header() {
             </button>
           </DropdownMenuTrigger>
 
-          <DropdownMenuContent className='w-80'>
+          <DropdownMenuContent className='w-80' align="end" sideOffset={4}>
             <DropdownMenuLabel className="text-base font-semibold text-gray-500 mb-1">
               Notifications
             </DropdownMenuLabel>

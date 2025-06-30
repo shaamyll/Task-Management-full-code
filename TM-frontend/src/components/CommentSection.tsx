@@ -3,7 +3,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { MessageCircle, ChevronDown, ChevronUp } from "lucide-react"
-import { useAddComment } from "@/hooks/Comment-Hook"
+import { useAddComment } from "@/hooks/use-Comment-Hook"
 import { format } from "timeago.js"
 import DeleteComment from "./DeleteComment"
 
