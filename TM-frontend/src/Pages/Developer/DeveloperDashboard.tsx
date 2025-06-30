@@ -8,7 +8,7 @@ const DeveloperDashboard = () => {
 
       <div className="mx-10 mt-20 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-semibold">Tasks</h1>
+          <h1 className="text-3xl font-semibold">My Projects</h1>
           <p className="text-gray-600">
             Developers can update status and comment on their tasks.
           </p>

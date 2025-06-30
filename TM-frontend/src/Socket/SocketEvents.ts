@@ -11,3 +11,12 @@ export const emitNewComment = (taskId: number, comment: any) => {
 export const registerUser = (userId: number) => {
   socket.emit('registerUser', userId);
 };
+
+
+export const disconnectSocket = () => {
+  socket.disconnect();
+};
+
+export const reconnectSocket = () => {
+  socket.connect();
+};

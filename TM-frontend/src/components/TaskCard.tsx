@@ -21,7 +21,7 @@ const TaskCard = () => {
 
   console.log(error)
 
-  console.log(taskData)
+  // console.log(taskData)
 
   const handleReset = () => {
     setSearchTitle('')

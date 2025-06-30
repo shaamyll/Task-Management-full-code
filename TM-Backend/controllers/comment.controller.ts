@@ -1,17 +1,18 @@
 import { NextFunction, Request, Response } from "express";
 import { CommentService } from "../services/comment.service";
+import redis, { clearTaskCache } from "../config/Redis";
 
 class CommentController {
   public commentService = new CommentService();
 
-  public createComment = async (req: Request, res: Response ) => {
+  public createComment = async (req: Request, res: Response) => {
     try {
       const userId = req.user?.id;
       const { content } = req.body;
       const taskId = parseInt(req.params.taskId);
 
       if (!userId || !content || isNaN(taskId)) {
-         res.status(400).json({ message: "Missing or invalid required fields" });
+        res.status(400).json({ message: "Missing or invalid required fields" });
       }
 
       const comment = await this.commentService.createComment({
@@ -20,30 +21,40 @@ class CommentController {
         userId,
       });
 
-       res.status(201).json({
+      //Clear cache
+      await clearTaskCache(taskId);
+
+
+      res.status(201).json({
         message: "Comment added successfully",
         comment,
       });
     } catch (err: any) {
-       res.status(500).json({ message: err.message });
+      res.status(500).json({ message: err.message });
     }
   };
 
 
 
 
-     public deleteComment = async (req: Request, res: Response ) => {
+  public deleteComment = async (req: Request, res: Response) => {
 
-        try {
-            const data = await this.commentService.deleteComment(
-                req.params.commentId as unknown as number,
-            );
-            res.status(201).json({message:"Comment Deleted Successfully",data});
+    try {
 
-        } catch(err:any){
-            res.status(err.status??500).json({message:err.message})
-        }
+      const commentId = req.params.commentId;
+      const data = await this.commentService.deleteComment(
+        commentId as unknown as number,
+      );
+
+      //Clear cache
+      await clearTaskCache(data.taskId);
+
+      res.status(201).json({ message: "Comment Deleted Successfully", data });
+
+    } catch (err: any) {
+      res.status(err.status ?? 500).json({ message: err.message })
     }
+  }
 
 
 }

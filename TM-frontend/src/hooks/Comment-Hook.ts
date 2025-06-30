@@ -1,5 +1,6 @@
 // hooks/useAddComment.ts
 import { addCommentAPI, deleteCommentAPI } from "@/services/AllAPIs"
+import { emitNewComment } from "@/Socket/SocketEvents"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 
@@ -28,9 +29,11 @@ export const useAddComment = () => {
             return response.data
         },
 
-        onSuccess: (data) => {
-            toast.success(data.message)
-            queryClient.invalidateQueries({ queryKey: ["taskKey"] })
+        onSuccess: (data, variables) => {
+            console.log(data)
+            toast.success(data.message);
+            queryClient.invalidateQueries({ queryKey: ["taskKey"] });
+            emitNewComment(variables.taskId, data.comment);
         },
 
         onError: (error) => {

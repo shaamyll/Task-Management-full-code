@@ -10,8 +10,6 @@ const options: Options = {
     port: process.env.DB_PORT as unknown as number,
     dialect: 'postgres',
     host: process.env.DB_HOST,
-    // sync: { alter: true,logging:true },
-    // logging: true, 
     logging: console.log,
 };
 

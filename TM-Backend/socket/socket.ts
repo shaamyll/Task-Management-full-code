@@ -1,6 +1,7 @@
 import { Server } from 'socket.io';
 import http from 'http';
 import { Express } from 'express';
+import { Task } from '../models/Task';
 
 let io: Server;
 
@@ -23,17 +24,30 @@ export const createSocketServer = (app: Express) => {
 
     socket.on('registerUser', (userId) => {
       socket.join(`user-${userId}`);
+      socket.join('global-status-room'); //room
     });
 
-    socket.on('newComment', ({ taskId, comment }) => {
+    //Comment
+    socket.on('newComment', async({ taskId, comment }) => {
       io.to(`task-${taskId}`).emit('receiveComment', comment);
+
+      // Fetch task title
+      const title = await Task.findByPk(taskId, { attributes: ['title'] });
+
+
+      const message = `New comment "${comment.content}" on Task #${title}`;
+      io.to('global-status-room').emit('receiveCommentNotification', { message });
     });
 
     socket.on('statusUpdate', ({ taskId, status }) => {
-      io.to(`task-${taskId}`).emit('receiveStatusUpdate', status);
+      io.to('global-status-room').emit('receiveStatusUpdate', {
+        taskId,
+        status,
+        message: `Task #${taskId} is  "${status}"`
+      });
     });
 
-    socket.on('sendNotification', ({ userId, message }) => {
+    socket.off('sendNotification', ({ userId, message }) => {
       io.to(`user-${userId}`).emit('notification', { message });
     });
 
@@ -41,7 +55,7 @@ export const createSocketServer = (app: Express) => {
       console.log('User disconnected:', socket.id);
     });
 
-    
+
   });
 
   return httpServer;

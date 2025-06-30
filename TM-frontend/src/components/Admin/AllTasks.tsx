@@ -51,7 +51,6 @@ const AllTasks = () => {
         setStatusFilter('')
         setStartDateFilter(undefined)
         setEndDateFilter(undefined)
-
     }
 
     const [userRole, setUserRole] = useState('')

@@ -2,9 +2,10 @@ import { useState } from "react"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { MessageCircle, ChevronDown, ChevronUp, Trash2, Loader2 } from "lucide-react"
-import { useAddComment, useDeleteComment } from "@/hooks/Comment-Hook"
+import { MessageCircle, ChevronDown, ChevronUp } from "lucide-react"
+import { useAddComment } from "@/hooks/Comment-Hook"
 import { format } from "timeago.js"
+import DeleteComment from "./DeleteComment"
 
 type CommentSectionProps = {
   comments: any[]
@@ -19,7 +20,6 @@ const CommentSection = ({ comments, taskId }: CommentSectionProps) => {
   const currentUserId = Number(localStorage.getItem("userId"))
 
   const { mutate: addComment, isPending: addingComment } = useAddComment()
-  const { mutate: deleteComment, isPending: deletingComment } = useDeleteComment()
 
   return (
     <div className="mt-4 border-t pt-2">
@@ -65,7 +65,7 @@ const CommentSection = ({ comments, taskId }: CommentSectionProps) => {
                           {c.content}
                         </p>
                         <p>  <span className="text-sm text-gray-500">- {c.User?.username || "You"}</span></p>
-                               
+
                       </div>
 
                       <div className="text-left flex justify-between text-sm text-muted-foreground">
@@ -73,21 +73,14 @@ const CommentSection = ({ comments, taskId }: CommentSectionProps) => {
 
                         {isCurrentUser && (
                           <div className="flex items-center gap-2 ml-4">
-                            
-                          
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => deleteComment({ commentId: c.id })}
-                              disabled={deletingComment}
-                        
-                            >
-                              {deletingComment ? (
-                                <Loader2 className="h-4 w-4 animate-spin" />
-                              ) : (
-                                <Trash2 className="h-4 w-4 text-gray-500" />
-                              )}
-                            </Button>
+
+
+                            <DeleteComment
+                              commentId={c.id}
+                              content={c.content}
+                              
+                            />
+
                           </div>
                         )}
                       </div>
@@ -104,27 +97,27 @@ const CommentSection = ({ comments, taskId }: CommentSectionProps) => {
           {
             (role !== "user") && (
               <div className="flex flex-col gap-2">
-            <Textarea
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-              placeholder="Write a comment..."
-              className="text-sm"
-            />
-            <Button
-              size="sm"
-              disabled={!comment || addingComment}
-              onClick={() =>
-                addComment(
-                  { taskId, content: comment },
-                  {
-                    onSuccess: () => setComment(""),
+                <Textarea
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                  placeholder="Write a comment..."
+                  className="text-sm"
+                />
+                <Button
+                  size="sm"
+                  disabled={!comment || addingComment}
+                  onClick={() =>
+                    addComment(
+                      { taskId, content: comment },
+                      {
+                        onSuccess: () => setComment("")
+                      }
+                    )
                   }
-                )
-              }
-            >
-              {addingComment ? "Posting..." : "Add Comment"}
-            </Button>
-          </div>
+                >
+                  {addingComment ? "Posting..." : "Add Comment"}
+                </Button>
+              </div>
             )
           }
 

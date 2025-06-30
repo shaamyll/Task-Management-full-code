@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import 'reflect-metadata';
-import sequelize from './models';
+import sequelize from './models/DB';
 import AuthRoutes from './routes/auth.routes';
 import TaskRoutes from './routes/task.routes';
 import CommentRoutes from './routes/comment.routes';

@@ -26,8 +26,8 @@ const UpdateStatus = ({ task }: { task: any }) => {
     { status: newStatus },
     {
       onSuccess: () => {
-        emitStatusUpdate(task.title, newStatus); //Real time notification
-        toast.success(`${task.title}Status updated to "${newStatus}"`);
+        emitStatusUpdate(task.title, newStatus); 
+        // toast.success(`Task "${task.title}" Status updated to "${newStatus}"`);
       },
       onError: () => {
         toast.error('Failed to update status');

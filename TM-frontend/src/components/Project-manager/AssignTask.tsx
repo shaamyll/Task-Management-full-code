@@ -63,7 +63,7 @@ const AssignTask = () => {
     );
   }
 
-    const [searchTitle] = useState<string | undefined>('')
+  const [searchTitle] = useState<string | undefined>('')
   const [statusFilter] = useState<string | undefined>('')
 
   const filters = {
@@ -77,71 +77,84 @@ const AssignTask = () => {
 
   return (
     <div>
-      <div className="p-10 border border-gray-200 shadow-md rounded mt-3 flex flex-col gap-6">
+     <div className="p-10 border border-gray-200 shadow-md rounded mt-3 flex flex-col gap-6">
+  {/* Flex container for Selects and Button */}
+  <div className="flex flex-wrap items-end gap-6">
+    
+    {/* Select Task */}
+    <div className="flex flex-col w-80 mx-10">
+      <label htmlFor="task" className="mb-2 text-sm font-medium text-gray-700">
+        Select Task
+      </label>
+      <Select value={seletctedTask} onValueChange={setSelectedTask}>
+        <SelectTrigger id="task">
+          <SelectValue placeholder="Select task" />
+        </SelectTrigger>
+        <SelectContent>
+          {
+            loadingTasks ? (
+              <SelectItem value="loading" disabled>
+                <Loader2 className="animate-spin h-4 w-4" />
+              </SelectItem>
+            ) : (
+              !allTasks || allTasks.length === 0 ? (
+                <SelectItem value="no tasks" disabled>No pending Tasks</SelectItem>
+              ) : (
+                allTasks.map((task: any) => (
+                  <SelectItem key={task.id} value={String(task.id)}>
+                    {task.title}
+                    <span className="text-gray-500 px-2">( {task.status} )</span>
+                  </SelectItem>
+                ))
+              )
+            )
+          }
+        </SelectContent>
+      </Select>
+    </div>
 
-        <div className="flex flex-wrap gap-6">
-          <div className="flex flex-col w-[30rem]">
-            <label htmlFor="task" className="mb-2 text-sm font-medium text-gray-700">
-              Select Task
-            </label>
-            <Select value={seletctedTask} onValueChange={setSelectedTask}>
-              <SelectTrigger
-                id="task"
+    {/* Select Developer */}
+    <div className="flex flex-col w-80 mx-10">
+      <label htmlFor="developer" className="mb-2 text-sm font-medium text-gray-700">
+        Choose a Developer
+      </label>
+      <Select onValueChange={setSelectedDeveloper} value={seletctedDeveloper}>
+        <SelectTrigger id="developer">
+          <SelectValue placeholder="Select developer" />
+        </SelectTrigger>
+        <SelectContent>
+          {
+            loadingUsers ? (
+              <SelectItem value="loading" disabled>
+                <Loader2 className="animate-spin h-4 w-4" />
+              </SelectItem>
+            ) : (
+              developerUsers.map((user: any) => (
+                <SelectItem key={user.id} value={String(user.id)}>
+                  {user.username}
+                  <span className="text-gray-600 mx-8">({user.email})</span>
+                </SelectItem>
+              ))
+            )
+          }
+        </SelectContent>
+      </Select>
+    </div>
 
-              >
-                <SelectValue placeholder="Select task" />
-              </SelectTrigger>
-              <SelectContent >
-                {
-                  loadingTasks ? (
-                    <SelectItem value="loading"><Loader2 className="animate-spin h-4 w-4" /></SelectItem>
-                  ) : (
-                    !allTasks || allTasks.length == 0 ? (<SelectItem value="no tasks" disabled>No pending Tasks</SelectItem>) :
-                      (allTasks.map((task: any) => (
-                        <SelectItem key={task.id} value={String(task.id)}>{task.title} <span className="text-gray-500 px-2">( {task.status} )</span></SelectItem>
-                      )))
-                  )
-                }
-              </SelectContent>
-            </Select>
-          </div>
+    {/* Assign Button */}
+    <div className="flex mx-12">
+      <Button className="w-40" onClick={assign} disabled={isPending}>
+        {isPending ? (
+          <span className="flex items-center gap-2">
+            <p>Assigning..</p>
+            <Loader2 className="animate-spin w-4 h-4" />
+          </span>
+        ) : "Assign Task"}
+      </Button>
+    </div>
+  </div>
+</div>
 
-          <div className="flex flex-col w-[30rem]">
-            <label htmlFor="developer" className="mb-2 text-sm font-medium text-gray-700">
-              Choose a Developer
-            </label>
-            <Select onValueChange={setSelectedDeveloper} value={seletctedDeveloper}>
-  <SelectTrigger id="developer">
-    <SelectValue placeholder="Select developer" />
-  </SelectTrigger>
-  <SelectContent>
-    {loadingUsers ? (
-      <SelectItem value="loading" disabled>
-        <Loader2 className="animate-spin h-4 w-4" />
-      </SelectItem>
-    ) : (
-      developerUsers.map((user: any) => (
-        <SelectItem key={user.id} value={String(user.id)}>
-          {user.username} <span className="text-gray-600 mx-8">({user.email})</span>
-        </SelectItem>
-      ))
-    )}
-  </SelectContent>
-</Select>
-
-          </div>
-
-          <div className="flex justify-end mt-7">
-            <Button className="w-48" onClick={assign} disabled={isPending}>
-              {isPending ? <span className="flex"><p>Assigning..</p><Loader2 className="animate-spin w-4 h-4" /></span> : "Assign Task"}
-            </Button>
-
-          </div>
-
-        </div>
-
-
-      </div>
 
 
 
@@ -162,53 +175,52 @@ const AssignTask = () => {
             </TableRow>
           </TableHeader>
 
-        <TableBody>
-  {loadingAssignments ? (
-    <TableRow>
-      <TableCell colSpan={8} className="py-10 text-center">
-        <div className="flex items-center justify-center gap-2 text-gray-500">
-          <Loader2 className="animate-spin w-7 h-7" />
-          <span>Loading data...</span>
-        </div>
-      </TableCell>
-    </TableRow>
-  ) : (
-    assignments.tasks
-      ?.filter((task: any) => task.assignedTo !== null)
-      .map((task: any, index: number) => (
-        <TableRow key={task.id}>
-          <TableCell className="px-6 py-4 text-center">{index + 1}</TableCell>
-          <TableCell className="font-medium px-6 py-4">{task.title}</TableCell>
-          <TableCell className="px-6 py-4">{task?.assignee?.username}</TableCell>
-          <TableCell className="px-6 py-4">{task?.assignee?.email}</TableCell>
-          <TableCell className="px-6 py-4">
-            <span
-              className={`inline-block px-4 py-1 text-sm font-medium text-white rounded-full capitalize shadow ${
-                task.status === 'planning'
-                  ? 'bg-yellow-500'
-                  : task.status === 'in_progress'
-                  ? 'bg-blue-400'
-                  : task.status === 'completed'
-                  ? 'bg-green-500'
-                  : 'bg-gray-400'
-              }`}
-            >
-              {task.status.replace('_', ' ')}
-            </span>
-          </TableCell>
-          <TableCell className="px-6 py-4">
-            {new Date(task.startDate).toLocaleDateString()}
-          </TableCell>
-          <TableCell className="px-6 py-4">
-            {task.endDate ? new Date(task.endDate).toLocaleDateString() : '_'}
-          </TableCell>
-          <TableCell className="px-6 py-4 text-right">
-            <RemoveAssigned task={task} assignedUser={task.assignee?.username || ' '} />
-          </TableCell>
-        </TableRow>
-      ))
-  )}
-</TableBody>
+          <TableBody>
+            {loadingAssignments ? (
+              <TableRow>
+                <TableCell colSpan={8} className="py-10 text-center">
+                  <div className="flex items-center justify-center gap-2 text-gray-500">
+                    <Loader2 className="animate-spin w-7 h-7" />
+                    <span>Loading data...</span>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : (
+              assignments.tasks
+                ?.filter((task: any) => task.assignedTo !== null)
+                .map((task: any, index: number) => (
+                  <TableRow key={task.id}>
+                    <TableCell className="px-6 py-4 text-center">{index + 1}</TableCell>
+                    <TableCell className="font-medium px-6 py-4">{task.title}</TableCell>
+                    <TableCell className="px-6 py-4">{task?.assignee?.username}</TableCell>
+                    <TableCell className="px-6 py-4">{task?.assignee?.email}</TableCell>
+                    <TableCell className="px-6 py-4">
+                      <span
+                        className={`inline-block px-4 py-1 text-sm font-medium text-white rounded-full capitalize shadow ${task.status === 'planning'
+                            ? 'bg-yellow-500'
+                            : task.status === 'in_progress'
+                              ? 'bg-blue-400'
+                              : task.status === 'completed'
+                                ? 'bg-green-500'
+                                : 'bg-gray-400'
+                          }`}
+                      >
+                        {task.status.replace('_', ' ')}
+                      </span>
+                    </TableCell>
+                    <TableCell className="px-6 py-4">
+                      {new Date(task.startDate).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell className="px-6 py-4">
+                      {task.endDate ? new Date(task.endDate).toLocaleDateString() : '_'}
+                    </TableCell>
+                    <TableCell className="px-6 py-4 text-right">
+                      <RemoveAssigned task={task} assignedUser={task.assignee?.username || ' '} />
+                    </TableCell>
+                  </TableRow>
+                ))
+            )}
+          </TableBody>
 
 
 

@@ -16,6 +16,7 @@ import { loginAPI, registerAPI } from '@/services/AllAPIs'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { Loader2 } from 'lucide-react'
+import socket from '@/Socket/socket'
 
 
 type AuthProps = {
@@ -50,6 +51,12 @@ export const Auth: React.FC<AuthProps> = ({ register }) => {
       const token: any = res?.data?.data?.token;
       const username: any = res?.data?.data?.user?.username;
       const userId: any = res?.data?.data?.user?.id;
+
+
+      socket.disconnect(); // 🔌 force disconnect
+      socket.connect();     // 🔌 reconnect fresh
+      socket.emit('registerUser', userId);
+
       localStorage.setItem('userId', userId);
       localStorage.setItem('token', token);
       localStorage.setItem('userEmail', email);
@@ -67,13 +74,13 @@ export const Auth: React.FC<AuthProps> = ({ register }) => {
           navigate('/userDashboard');
         } else if (role === 'admin') {
           navigate('/admin/usersPage')
-        } else if(role === "project_manager"){
+        } else if (role === "project_manager") {
           navigate('/pm/taskPage')
-        }  else if(role === "developer"){
+        } else if (role === "developer") {
           navigate('/dev/dashboard')
-        }else if(role === "tester"){
+        } else if (role === "tester") {
           navigate('/tester/dashboard')
-        }  else {
+        } else {
           reset()
         }
       }
@@ -162,7 +169,7 @@ export const Auth: React.FC<AuthProps> = ({ register }) => {
             <Button type="submit" className="w-full" disabled={isPending}>
               {isPending ? (
                 <>
-                  
+
                   {register ? "Registering" : "Logging in"}
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 </>

@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { createTaskDTO } from '../dtos/task.dto';
 import TaskServices from '../services/task.services';
-
+import redis, { clearTaskCache } from '../config/Redis';
 
 class TaskController {
     public taskService = new TaskServices();
@@ -47,10 +47,13 @@ class TaskController {
     public deleteTask = async (req: Request, res: Response, next: NextFunction) => {
 
         try {
-            const data = await this.taskService.deleteTask(
-                req.params.id as unknown as number,
+            const taskId = req.params.id as unknown as number;
 
-            );
+            const data = await this.taskService.deleteTask(taskId);
+
+            //clearing cahce logic
+           await clearTaskCache(taskId)
+
             res.status(201).json({ message: "Task Deleted Successfully", data });
 
         } catch (err: any) {
@@ -64,7 +67,12 @@ class TaskController {
 
         try {
             const updatedData = req.body as createTaskDTO
+            const taskId = req.params.id as unknown as number;
             const data = await this.taskService.updateTask(req.params.id, updatedData)
+
+            //clear cache
+           await clearTaskCache(taskId);
+
             res.status(200).json({ message: "Task Updated Successfully", data });
 
         } catch (err: any) {
@@ -80,6 +88,10 @@ class TaskController {
 
         try {
             const task = await this.taskService.assignTask(Number(taskId), assignedTo);
+
+            //clear cache
+            await clearTaskCache(Number(taskId));
+
             res.status(200).json({ message: `Task Assigned successfully`, task });
         } catch (err: any) {
             res.status(err.status || 500).json({ message: err.message || "task Assigning failed" });
@@ -97,6 +109,9 @@ class TaskController {
 
         try {
             const task = await this.taskService.removeAssignment(Number(taskId));
+
+            //clear cache
+            await clearTaskCache(Number(taskId));
             res.status(200).json({
                 message: "Assignment removed successfully",
                 task
@@ -107,51 +122,89 @@ class TaskController {
     };
 
 
-    //Assigned Tasks
+
     // Get All Assigned Tasks
-public getAssignedTasks = async (req: Request, res: Response) => {
-  try {
-    const { searchTitle = '', filterStatus = '' } = req.query as {
-      searchTitle?: string;
-      filterStatus?: string;
+    public getAssignedTasks = async (req: Request, res: Response) => {
+        try {
+            const { searchTitle = '', filterStatus = '' } = req.query as {
+                searchTitle?: string;
+                filterStatus?: string;
+            };
+
+            const filters = { searchTitle, filterStatus };
+
+            const cacheKey = `tasks:assigned:${searchTitle}:${filterStatus}`;
+
+            // Try Redis first
+            const cached = await redis.get(cacheKey);
+            if (cached) {
+                console.log(`[CACHE HIT] ${cacheKey}`);
+                 res.status(200).json({
+                    message: "Fetched from cache",
+                    tasks: JSON.parse(cached),
+                });
+                return;
+            }
+
+            console.log(`[CACHE MISS] ${cacheKey}`);
+
+
+            const tasks = await this.taskService.getAssignedTasks(filters);
+
+            await redis.set(cacheKey, JSON.stringify(tasks), 'EX', 3600);
+
+
+            res.status(200).json({
+                message: "Assigned tasks fetched successfully",
+                tasks,
+            });
+        } catch (error: any) {
+            res.status(500).json({ message: error.message });
+        }
     };
 
-    const filters = { searchTitle, filterStatus };
-    const tasks = await this.taskService.getAssignedTasks(filters);
 
-    res.status(200).json({
-      message: "Assigned tasks fetched successfully",
-      tasks,
-    });
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
-  }
-};
+    // Get Developer's Assigned Tasks
+    public getDevelopersTasks = async (req: Request, res: Response) => {
+        try {
+            const userId = req.user?.id;
+
+            const { searchTitle = '', filterStatus = '' } = req.query as {
+                searchTitle?: string;
+                filterStatus?: string;
+            };
+
+            const filters = { searchTitle, filterStatus };
+
+            //cache Key
+            const cacheKey = `tasks:assigned:${userId}:${searchTitle}:${filterStatus}`;
+
+            // Try Redis first
+            const cached = await redis.get(cacheKey);
+            if (cached) {
+                console.log(`[CACHE HIT:Developer] ${cacheKey}`);
+                 res.status(200).json({
+                    message: "Developer tasks fetched successfully (from cache)",
+                    tasks: JSON.parse(cached),
+                });
+                return;
+            }
+
+            const tasks = await this.taskService.getDevelopersTasks(userId, filters);
+
+            // set data in cache
+            await redis.set(cacheKey, JSON.stringify(tasks), 'EX', 3600);
 
 
-// Get Developer's Assigned Tasks
-public getDevelopersTasks = async (req: Request, res: Response) => {
-  try {
-    const userId = req.user?.id;
+            res.status(200).json({
+                message: "Developers tasks fetched successfully",
+                tasks,
+            });
 
-    const { searchTitle = '', filterStatus = '' } = req.query as {
-      searchTitle?: string;
-      filterStatus?: string;
+        } catch (err: any) {
+            res.status(500).json({ message: err.message });
+        }
     };
-
-    const filters = { searchTitle, filterStatus };
-
-    const tasks = await this.taskService.getDevelopersTasks(userId, filters);
-
-    res.status(200).json({
-      message: "Developers tasks fetched successfully",
-      tasks,
-    });
-
-  } catch (err: any) {
-    res.status(500).json({ message: err.message });
-  }
-};
 
 
 }
