@@ -7,6 +7,8 @@ import useTaskRealtimeListeners from '@/Socket/SocketListeners';
 const UserTaskcard = () => {
 
 
+      useTaskRealtimeListeners()
+      7
     //fetch Tasks
     const { data: taskData, isLoading, error } = fetchAllAssignmentsHook({});
     console.log(taskData);
@@ -31,7 +33,7 @@ const UserTaskcard = () => {
     }
 
 
-        useTaskRealtimeListeners()
+      
 
 
 

@@ -3,8 +3,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "tsnd --respawn --files index.ts"
-  },
+  "dev": "tsnd --respawn --files index.ts",
+  "build": "tsc",
+  "start": "node dist/index.js"
+}
+,
   "keywords": [],
   "author": "",
   "license": "ISC",

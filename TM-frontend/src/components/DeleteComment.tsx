@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Button } from './ui/button'
 import { Loader2, Trash2 } from 'lucide-react'
+import useTaskRealtimeListeners from '@/Socket/SocketListeners'
 
 type DeleteCommentProps = {
   commentId: number
@@ -24,6 +25,9 @@ const DeleteComment = ({ commentId, content }: DeleteCommentProps) => {
   const handleDelete = () => {
     deleteComment({ commentId })
   }
+
+
+  useTaskRealtimeListeners()
 
   return (
     <AlertDialog>

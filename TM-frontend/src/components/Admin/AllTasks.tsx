@@ -22,8 +22,11 @@ import CreateTask from "./CreateTask"
 import DeleteTask from "./DeleteTask"
 import UpdateTask from "./UpdateTask"
 import { allTaskHook } from "@/hooks/use-Task-Hook"
+import useTaskRealtimeListeners from "@/Socket/SocketListeners"
 
 const AllTasks = () => {
+
+    useTaskRealtimeListeners()
 
     const [startOpen, setStartOpen] = React.useState(false)
     const [endOpen, setEndOpen] = React.useState(false)
@@ -53,7 +56,7 @@ const AllTasks = () => {
         setEndDateFilter(undefined)
     }
 
-    const [userRole, setUserRole] = useState('')
+    const [,     setUserRole] = useState('')
 
     useEffect(() => {
         const currentUserRole = localStorage.getItem('role')

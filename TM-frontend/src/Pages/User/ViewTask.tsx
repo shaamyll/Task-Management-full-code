@@ -1,9 +1,11 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import useTaskRealtimeListeners from '@/Socket/SocketListeners';
+
 
 const formatDateTime = (dateString: string) => {
+
+
   return new Date(dateString).toLocaleString('en-US', {
     year: 'numeric',
     month: 'short',
@@ -18,6 +20,7 @@ const ViewTask = () => {
   const navigate = useNavigate();
   const task = location.state?.task;
 
+
   if (!task) {
     return (
       <div className="p-6 text-center">
@@ -27,10 +30,12 @@ const ViewTask = () => {
     );
   }
 
-  useTaskRealtimeListeners()
   return (
-    <div className="p-6 max-w-4xl mx-auto mt-14">
-      <div className="flex justify-between items-center mb-4">
+    <div className={`p-6  mx-auto max-h-[90lvh] mt-10 ${task.status === 'planning' ? 'bg-yellow-50'
+                            : task.status === 'in_progress' ? 'bg-blue-50'
+                                : task.status === 'completed' ? 'bg-green-50' : ""
+                        }`}>
+      <div className="flex justify-between items-center mb-4 ">
         <h2 className="text-2xl font-bold text-gray-800">{task.title} Details</h2>
         <Button onClick={() => navigate(-1)} >Back</Button>
       </div>

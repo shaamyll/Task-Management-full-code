@@ -27,16 +27,16 @@ export const createSocketServer = (app: Express) => {
 
     //  new comment
     socket.on('newComment', async ({ taskId, comment }) => {
-      io.to(`task-${taskId}`).emit('receiveComment', {taskId,comment});
+      io.to('global-status-room').emit('receiveCommentUpdate', {taskId,comment});
 
       const task = await Task.findByPk(taskId, { attributes: ['title'] });
       const message = task && `New comment "${comment.content}" on task ${task.title}`
  
       io.to('global-status-room').emit('receiveCommentNotification', { taskId,comment,message });
+      
     });
+    
 
-
-    // 
     //  status update
     socket.on('statusUpdate', ({ taskId, status,title }) => {
       io.to('global-status-room').emit('receiveStatusUpdate', {

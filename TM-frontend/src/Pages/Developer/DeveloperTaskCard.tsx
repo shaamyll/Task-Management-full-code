@@ -73,10 +73,10 @@ const DeveloperTaskCard = () => {
             <Loader2 className="animate-spin inline-block mr-2" />
             Loading tasks...
           </div>
-        ) : taskData?.tasks.length === 0 ? (
+        ) : taskData?.tasks?.length === 0 ? (
           <p className="text-gray-500 col-span-full text-center">No tasks assigned</p>
         ) : (
-          taskData?.tasks.map((task: any) => (
+          (taskData?.tasks?? []).map((task: any) => (
             <Card
               key={task.id}
               className="bg-white border rounded-lg shadow-md hover:shadow-lg transition-all duration-300"

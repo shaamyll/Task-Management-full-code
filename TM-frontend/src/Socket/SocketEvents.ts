@@ -19,4 +19,4 @@ export const disconnectSocket = () => {
 
 export const reconnectSocket = () => {
   socket.connect();
-};
+};  

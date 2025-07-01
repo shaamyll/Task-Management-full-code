@@ -26,7 +26,11 @@ export class CommentService {
           const taskId = comment.taskId;
   
           await Comment.destroy({where:{id}})
+
+          
           return {taskId}
+
+          
       }
 
 }

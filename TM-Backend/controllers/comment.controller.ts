@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { CommentService } from "../services/comment.service";
 import redis, { clearTaskCache } from "../config/Redis";
+import { io } from "../socket/socket";
 
 class CommentController {
   public commentService = new CommentService();
@@ -43,7 +44,12 @@ public deleteComment = async (req: Request, res: Response) => {
 
     const { taskId } = await this.commentService.deleteComment(commentId);
 
-    await clearTaskCache(taskId);
+     io.to('global-status-room').emit('commentDeleted', {
+      commentId,
+      taskId,
+    });
+    
+    await clearTaskCache();
 
     res.status(201).json({ message: "Comment Deleted Successfully" });
   } catch (err: any) {

@@ -1,4 +1,3 @@
-import { log } from 'node:console';
 import { Sequelize,Options } from 'sequelize'
 
 require("dotenv").config();

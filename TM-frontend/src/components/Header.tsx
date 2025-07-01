@@ -38,6 +38,7 @@ function Header() {
     },
   })
 
+  
   useEffect(() => {
     const storedEmail = localStorage.getItem('userEmail')
     const storedUsername = localStorage.getItem('username')
@@ -70,7 +71,6 @@ function Header() {
     return () => {
       socket.off('receiveStatusUpdate')
       socket.off('receiveCommentNotification');
-
     }
   }, [])
 
