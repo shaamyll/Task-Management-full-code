@@ -4,9 +4,9 @@ import { useState } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
-
 import CommentSection from '@/components/CommentSection'
 import { fetchAllAssignmentsHook } from '@/hooks/use-Assignments-Hook'
+import useTaskRealtimeListeners from '@/Socket/SocketListeners'
 
 const TaskCard = () => {
   const [searchTitle, setSearchTitle] = useState<string | undefined>('')
@@ -17,16 +17,16 @@ const TaskCard = () => {
     filterStatus: statusFilter,
   }
 
-  const { data: taskData, error, isLoading } = fetchAllAssignmentsHook(filters)
-
-  console.log(error)
-
-  // console.log(taskData)
+  const { data: taskData, isLoading } = fetchAllAssignmentsHook(filters)
 
   const handleReset = () => {
     setSearchTitle('')
     setStatusFilter('')
   }
+
+
+  //socket
+  useTaskRealtimeListeners()
 
   return (
     <div>
@@ -65,11 +65,12 @@ const TaskCard = () => {
             <Loader2 className="animate-spin inline-block mr-2" />
             Loading tasks...
           </div>
-        ) : taskData?.tasks.length === 0 ? (
+        ) : taskData?.tasks?.length === 0 ? (
           <p className="text-gray-500 col-span-full text-center">No tasks assigned</p>
         ) : (
-          taskData.tasks.map((task: any) => (
-            
+          (taskData?.tasks ?? []).map((task: any) => (
+
+
             <Card
               className="bg-white border rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
             >
@@ -78,12 +79,12 @@ const TaskCard = () => {
                   <h2 className="text-xl font-semibold">{task.title}</h2>
                   <span
                     className={`px-3 py-1 text-sm rounded-full text-white font-medium ${task.status === 'planning'
-                        ? 'bg-yellow-500'
-                        : task.status === 'in_progress'
-                          ? 'bg-blue-500'
-                          : task.status === 'completed'
-                            ? 'bg-green-500'
-                            : 'bg-gray-400'
+                      ? 'bg-yellow-500'
+                      : task.status === 'in_progress'
+                        ? 'bg-blue-500'
+                        : task.status === 'completed'
+                          ? 'bg-green-500'
+                          : 'bg-gray-400'
                       }`}
                   >
                     {task.status.replace('_', ' ')}

@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/select'
 import { useUpdateTask } from '@/hooks/use-Task-Hook'
 import { emitStatusUpdate } from '@/Socket/SocketEvents'
-import { useEffect, useState } from 'react'
+import {  useState } from 'react'
 import { toast } from 'sonner'
 
 const UpdateStatus = ({ task }: { task: any }) => {
@@ -26,8 +26,7 @@ const UpdateStatus = ({ task }: { task: any }) => {
     { status: newStatus },
     {
       onSuccess: () => {
-        emitStatusUpdate(task.title, newStatus); 
-        // toast.success(`Task "${task.title}" Status updated to "${newStatus}"`);
+        emitStatusUpdate(task.id, newStatus ,task.title); 
       },
       onError: () => {
         toast.error('Failed to update status');

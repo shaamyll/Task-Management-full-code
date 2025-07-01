@@ -12,17 +12,8 @@ export const useAssignTask = () => {
   return useMutation({
     mutationFn: async ({ taskId, userId }: AssignPayload) => {
         await new Promise((resolve) => setTimeout(resolve, 700)); 
-      const token = localStorage.getItem('token');
-      if (!token) {
-        throw new Error('No token found');
-      }
 
-      const headers = {
-        Authorization: `${token}`,
-        'Content-Type': 'application/json',
-      };
-
-      const response = await assignTaskAPI(taskId, userId, headers);
+      const response = await assignTaskAPI(taskId, userId);
       return response.data;
     },
 
@@ -44,15 +35,8 @@ export const useRemoveAssignment = () => {
 
   return useMutation({
     mutationFn: async ({ taskId }: { taskId: number }) => {
-      const token = localStorage.getItem("token");
-      if (!token) throw new Error("No token found");
 
-      const headers = {
-        Authorization: `${token}`,
-        "Content-Type": "application/json"
-      };
-
-      const response = await removeAssignmentAPI(taskId, headers);
+      const response = await removeAssignmentAPI(taskId);
       return response.data;
     },
     onSuccess: (data) => {
@@ -70,20 +54,12 @@ export const fetchAllAssignmentsHook = (filters: any) => {
     queryKey: ['taskKey', filters],
     queryFn: async ({ queryKey }) => {
       const [, filters] = queryKey; // destructure filters from queryKey
-      const token = localStorage.getItem('token');
-      if (!token) {
-        throw new Error('No token found');
-      }
 
-      const headers = {
-        Authorization: `${token}`,
-        'Content-Type': 'application/json',
-      };
-
-      const response = await fetchAllAssignments(filters,headers);
+      const response = await fetchAllAssignments(filters);
       return response.data;
     },
     refetchOnWindowFocus: false,
+
   });
 };
 
@@ -96,17 +72,8 @@ export const fetchDevelopersTasksHook = (filters: any) => {
     queryKey: ['taskKey', filters],
     queryFn: async ({queryKey}) => {
       const [, filters] = queryKey;
-      const token = localStorage.getItem('token');
-      if (!token) throw new Error('No token found');
 
-      const headers = {
-        Authorization: `${token}`,
-        'Content-Type': 'application/json',
-      };
-
-   
-
-      const response = await fetchdeveloperTasksAPI(filters, headers);
+      const response = await fetchdeveloperTasksAPI(filters);
       return response.data;
     },
     refetchOnWindowFocus: false,

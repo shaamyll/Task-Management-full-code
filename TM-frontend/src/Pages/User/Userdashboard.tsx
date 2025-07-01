@@ -1,5 +1,5 @@
 import Header from '@/components/Header'
-import TaskCard from '@/components/TaskCard'
+import UserTaskcard from './UserTaskCard'
 
 
 const Userdashboard = () => {
@@ -15,13 +15,15 @@ const Userdashboard = () => {
       <div className='mt-14 flex items-center justify-between mx-10'>
           
 
-        <p className='text-3xl'>Tasks:</p>
-
+     <div>
+         <p className='text-3xl'>Tasks:</p>
+      <p>Kanban-style task board: </p>
+     </div>
 
       </div>
 
     
-     <TaskCard/>
+     <UserTaskcard/>
     </div>  
   )
 }

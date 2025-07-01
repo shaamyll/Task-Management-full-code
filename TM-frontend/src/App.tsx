@@ -11,6 +11,7 @@ import PM_TaskPage from './Pages/project-Manager/PM_TaskPage'
 import AssigningPage from './Pages/project-Manager/AssigningPage'
 import DeveloperDashboard from './Pages/Developer/DeveloperDashboard'
 import TesterDashboard from './Pages/Tester/TesterDashboard'
+import ViewTask from './Pages/User/ViewTask'
 
 
 function App() {
@@ -22,18 +23,20 @@ function App() {
         <Routes>
           <Route path="/" element={<Auth />} />
           <Route path="/register" element={<Auth register />} />
+          {/* User */}
           <Route path='/userDashboard' element={<Userdashboard />} />
+          <Route path='/viewTask' element={<ViewTask/>}/>
           {/* Admin Pages */}
           <Route path='/admin/dashboard' element={<AdminDashboard />} />
           <Route path='/admin/usersPage' element={<ManageUsers />} />
           <Route path='/admin/taskPage' element={<TaskPage />} />
           {/* Project-manager */}
-          <Route path='/pm/taskPage' element={<PM_TaskPage/>} />
-          <Route path='/pm/Assignments' element={<AssigningPage/>} />
+          <Route path='/pm/taskPage' element={<PM_TaskPage />} />
+          <Route path='/pm/Assignments' element={<AssigningPage />} />
           {/* Developer */}
-          <Route path='/dev/dashboard' element={<DeveloperDashboard/>}/>
+          <Route path='/dev/dashboard' element={<DeveloperDashboard />} />
           {/* Tester */}
-          <Route path='/tester/dashboard' element={<TesterDashboard/>}/>
+          <Route path='/tester/dashboard' element={<TesterDashboard />} />
         </Routes>
       </SidebarProvider>
     </>

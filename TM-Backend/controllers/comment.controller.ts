@@ -40,9 +40,6 @@ class CommentController {
 public deleteComment = async (req: Request, res: Response) => {
   try {
     const commentId = parseInt(req.params.commentId);
-    if (isNaN(commentId)) {
-       res.status(400).json({ message: "Invalid comment ID" });
-    }
 
     const { taskId } = await this.commentService.deleteComment(commentId);
 

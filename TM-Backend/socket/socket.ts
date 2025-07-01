@@ -24,26 +24,29 @@ export const createSocketServer = (app: Express) => {
       socket.join('global-status-room');
     });
 
-    // Handle new comment
-    
+
+    //  new comment
     socket.on('newComment', async ({ taskId, comment }) => {
-      io.to(`task-${taskId}`).emit('receiveComment', comment);
+      io.to(`task-${taskId}`).emit('receiveComment', {taskId,comment});
 
       const task = await Task.findByPk(taskId, { attributes: ['title'] });
       const message = task && `New comment "${comment.content}" on task ${task.title}`
  
-
-      io.to('global-status-room').emit('receiveCommentNotification', { message });
+      io.to('global-status-room').emit('receiveCommentNotification', { taskId,comment,message });
     });
 
-    // Handle status update
-    socket.on('statusUpdate', ({ taskId, status }) => {
+
+    // 
+    //  status update
+    socket.on('statusUpdate', ({ taskId, status,title }) => {
       io.to('global-status-room').emit('receiveStatusUpdate', {
         taskId,
         status,
-        message: `Task #${taskId} is "${status}"`,
+        title,
+        message: `Task #${title} is "${status}"`,
       });
     });
+
 
     socket.on('disconnect', () => {
       console.log('User disconnected:', socket.id);

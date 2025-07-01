@@ -6,6 +6,7 @@ import { MessageCircle, ChevronDown, ChevronUp } from "lucide-react"
 import { useAddComment } from "@/hooks/use-Comment-Hook"
 import { format } from "timeago.js"
 import DeleteComment from "./DeleteComment"
+import useTaskRealtimeListeners from "@/Socket/SocketListeners"
 
 type CommentSectionProps = {
   comments: any[]
@@ -13,6 +14,7 @@ type CommentSectionProps = {
 }
 
 const CommentSection = ({ comments, taskId }: CommentSectionProps) => {
+  
   const [showComments, setShowComments] = useState(false)
   const [comment, setComment] = useState("")
   const [role] = useState(localStorage.getItem("role"))
@@ -20,6 +22,8 @@ const CommentSection = ({ comments, taskId }: CommentSectionProps) => {
   const currentUserId = Number(localStorage.getItem("userId"))
 
   const { mutate: addComment, isPending: addingComment } = useAddComment()
+
+  useTaskRealtimeListeners()
 
   return (
     <div className="mt-4 border-t pt-2">

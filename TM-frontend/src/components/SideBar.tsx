@@ -4,7 +4,7 @@ import {
   SidebarGroup,
   SidebarGroupContent,
 } from "@/components/ui/sidebar";
-import { UsersRound, LayoutDashboard, FilePen, NotebookTabs } from 'lucide-react';
+import { UsersRound, FilePen, NotebookTabs } from 'lucide-react';
 import { useEffect, useState } from "react";
 
 function SideBar() {

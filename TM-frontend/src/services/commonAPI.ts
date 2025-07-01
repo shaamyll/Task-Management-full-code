@@ -3,6 +3,7 @@ import axios, {
   type Method,
   type AxiosResponse,
 } from 'axios'
+import axiosInstance from './AxiosInstance'
 
 export const commonAPI = async <T = any>(
   httpMethod: Method,
@@ -25,7 +26,7 @@ export const commonAPI = async <T = any>(
   }
 
   try {
-    const response = await axios<T>(config)
+    const response = await axiosInstance<T>(config)
     return response
   } catch (error: any) {
     if (axios.isAxiosError(error)) {

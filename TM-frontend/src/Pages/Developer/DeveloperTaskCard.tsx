@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { fetchDevelopersTasksHook } from '@/hooks/use-Assignments-Hook'
 import UpdateStatus from './UpdateStatus'
 import CommentSection from '@/components/CommentSection'
+import useTaskRealtimeListeners from '@/Socket/SocketListeners'
 
 const DeveloperTaskCard = () => {
   const [searchTitle, setSearchTitle] = useState<string | undefined>('')
@@ -25,6 +26,8 @@ const DeveloperTaskCard = () => {
     setStatusFilter('')
   }
 
+
+  useTaskRealtimeListeners()
  
   return (
     <div>

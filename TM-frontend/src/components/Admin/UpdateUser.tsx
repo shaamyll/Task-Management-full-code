@@ -10,15 +10,11 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-
-
 import { Controller, useForm } from "react-hook-form"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import {  updateUserAPI } from "@/services/AllAPIs"
-import { toast } from "sonner"
 import { useState } from "react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 import { Pencil } from "lucide-react"
+import { useUpdateUser } from "@/hooks/use-Users-Hook"
 
 type UserForm = {
     username?: string
@@ -37,38 +33,14 @@ const UpdateUser = ({ user }: { user: any }) => {
         }
     })
 
-    const queryClient = useQueryClient()
 
-    const { mutate, isPending } = useMutation({
-        mutationFn: async (data: UserForm) => {
-            const token = localStorage.getItem("token")
-            if (!token) throw new Error("Token missing")
-            const headers = {
-                Authorization: `${token}`,
-                "Content-Type": "application/json"
-            }
-            const response = await updateUserAPI(user.id,data, headers)
-            return response
-
-        },
-        onSuccess: (res) => {
-            toast.success(res.data.message)
-            queryClient.invalidateQueries({ queryKey: ["userData"] })
-            console.log(res)
-        },
-        onError: (err: any) => {
-            toast.error(err.response?.data?.message || "Failed to create user")
-        }
-    })
+    const { mutate, isPending } = useUpdateUser(user.id,)
 
     const onSubmit = (data: UserForm) => {
         mutate(data)
         console.log(data)
         setopen(false)
     }
-
-
-
 
 
     return (

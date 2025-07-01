@@ -1,6 +1,3 @@
-import React from 'react'
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'sonner';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -14,36 +11,13 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Trash2 } from 'lucide-react';
 import { Button } from '../ui/button';
-import { deleteTaskAPI } from '@/services/AllAPIs';
+import { useDeleteTask } from '@/hooks/use-Task-Hook';
 
 
 const DeleteTask = ({ task }: { task: any }) => {
 
-    const queryClient = useQueryClient()
 
-
-    const { mutate:deleteTask,isPending } = useMutation({
-        mutationFn: async (taskId: number) => {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                throw new Error('No token found');
-            }
-            const header = {
-                Authorization: `${token}`,
-                'Content-Type': 'application/json'
-            };
-            const response = await deleteTaskAPI(taskId , header)
-            return response
-        },
-        onSuccess: (res: any) => {
-            queryClient.invalidateQueries({ queryKey: ["taskKey"] })  //State management of tasks bwtween components
-            console.log(res)
-             toast.success(res.data?.message)   
-        },
-        onError: (data) => {
-            console.log(data)
-        }
-    })
+    const { mutate:deleteTask,isPending } = useDeleteTask(task.id)
     return (
         <div>
             <AlertDialog>

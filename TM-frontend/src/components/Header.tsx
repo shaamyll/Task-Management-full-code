@@ -89,8 +89,8 @@ function Header() {
             <button className="relative focus:outline-none">
               <BellDot className="w-6 h-6 text-gray-800" />
               {notificationCount <= 0 ? (
-                <span className="absolute -top-1 -right-1 w-4 h-4 text-[10px] bg-red-600 text-white rounded-full flex items-center justify-center">
-                  0
+                <span className="absolute -top-1 -right-1 w-4 h-4 text-[10px]  text-white rounded-full flex items-center justify-center">
+                  
                 </span> 
               ) : (
                 <span className="absolute -top-1 -right-1 w-4 h-4 text-[10px] bg-red-600 text-white rounded-full flex items-center justify-center">

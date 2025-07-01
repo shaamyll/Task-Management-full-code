@@ -13,11 +13,9 @@ import { Label } from "@/components/ui/label"
 
 
 import { Controller, useForm } from "react-hook-form"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { createUserAPI } from "@/services/AllAPIs"
-import { toast } from "sonner"
 import { useState } from "react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
+import { useCreateUser } from "@/hooks/use-Users-Hook"
 
 type UserForm = {
     username?: string
@@ -32,35 +30,14 @@ const CreateUser = () => {
 
     const { register, reset, handleSubmit, control } = useForm<UserForm>()
 
-    const queryClient = useQueryClient()
 
-    const { mutate, isPending } = useMutation({
-        mutationFn: async (data: UserForm) => {
-            const token = localStorage.getItem("token")
-            if (!token) throw new Error("Token missing")
-            const headers = {
-                Authorization: `${token}`,
-                "Content-Type": "application/json"
-            }
-            const response = await createUserAPI(data, headers)
-            return response
-
-        },
-        onSuccess: (res) => {
-            toast.success(res.data.message)
-            queryClient.invalidateQueries({ queryKey: ["userData"] })
-            // console.log(res)
-            reset()
-        },
-        onError: (err: any) => {
-            toast.error(err.response?.data?.message || "Failed to create user")
-        }
+    const { mutate, isPending } = useCreateUser(()=>{
+        reset()
+         setopen(false)
     })
-
     const onSubmit = (data: UserForm) => {
         mutate(data)
-        console.log(data)
-        setopen(false)
+       
     }
 
 

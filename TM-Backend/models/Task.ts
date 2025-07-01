@@ -1,5 +1,5 @@
 import { Model, DataTypes, Optional } from 'sequelize';
-import sequelize from './DB'
+import sequelize from '../config/DB'
 import { User } from './User';
 import { Comment } from './Comment';
 

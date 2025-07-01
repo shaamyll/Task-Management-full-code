@@ -111,7 +111,7 @@ class TaskController {
             const task = await this.taskService.removeAssignment(Number(taskId));
 
             //clear cache
-            await clearTaskCache(Number(taskId));
+            await clearTaskCache();
 
             res.status(200).json({
                 message: "Assignment removed successfully",

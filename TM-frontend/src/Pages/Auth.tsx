@@ -33,6 +33,7 @@ type AuthFormData = {
 
 export const Auth: React.FC<AuthProps> = ({ register }) => {
 
+
   const navigate = useNavigate()
 
   const { register: formRegister, handleSubmit, reset } = useForm<AuthFormData>()
@@ -53,8 +54,8 @@ export const Auth: React.FC<AuthProps> = ({ register }) => {
       const userId: any = res?.data?.data?.user?.id;
 
 
-      socket.disconnect(); // 🔌 force disconnect
-      socket.connect();     // 🔌 reconnect fresh
+      socket.disconnect();
+      socket.connect();     
       socket.emit('registerUser', userId);
 
       localStorage.setItem('userId', userId);

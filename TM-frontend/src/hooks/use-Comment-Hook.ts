@@ -14,18 +14,7 @@ export const useAddComment = () => {
 
             await new Promise(resolve => setTimeout(resolve, 500))
 
-
-            const token = localStorage.getItem('token')
-            if (!token) {
-                throw new Error('No token found')
-            }
-
-            const headers = {
-                Authorization: `${token}`,
-                'Content-Type': 'application/json',
-            }
-
-            const response = await addCommentAPI(taskId, content, headers)
+            const response = await addCommentAPI(taskId, content)
             return response.data
         },
 
@@ -50,13 +39,8 @@ export const useDeleteComment = () => {
     return useMutation({
         mutationFn: async ({ commentId }: { commentId: number }) => {
             await new Promise(resolve => setTimeout(resolve, 500))
-            const token = localStorage.getItem('token')
-            if (!token) ("No token found")
-            const headers = {
-                Authorization: `${token}`,
-                'Content-Type': 'application/json',
-            }
-            const response = await deleteCommentAPI(commentId, headers)
+    
+            const response = await deleteCommentAPI(commentId)
             return response.data
         },
         onSuccess: (res) => {

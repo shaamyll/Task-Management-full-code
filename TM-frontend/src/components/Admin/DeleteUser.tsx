@@ -1,6 +1,3 @@
-import { deleteUserAPI } from '@/services/AllAPIs';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'sonner';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -14,33 +11,11 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Trash2 } from 'lucide-react';
 import { Button } from '../ui/button';
+import { useDeleteUser } from '@/hooks/use-Users-Hook';
 
 const DeleteUser = ({ user }: { user: any }) => {
 
-    const queryClient = useQueryClient()
-
-    const { mutate: deleteUser, isPending } = useMutation({
-        mutationFn: async (userId: number) => {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                throw new Error('No token found');
-            }
-            const header = {
-                Authorization: `${token}`,
-                'Content-Type': 'application/json'
-            };
-            const response = await deleteUserAPI(userId, header)
-            return response
-        },
-        onSuccess: (res: any) => {
-            queryClient.invalidateQueries({ queryKey: ["userData"] })
-            // console.log(res)
-            toast.success(res.data?.message)
-        },
-        onError: (data) => {
-            console.log(data)
-        }
-    })
+    const { mutate: deleteUser, isPending } = useDeleteUser(user.id)
 
     return (
         <div>

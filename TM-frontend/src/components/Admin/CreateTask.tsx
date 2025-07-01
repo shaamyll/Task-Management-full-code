@@ -17,9 +17,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { ChevronDownIcon } from 'lucide-react'
 import { Calendar } from '../ui/calendar'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'sonner'
-import { createTaskAPI } from '@/services/AllAPIs'
+import { useCreateTask } from '@/hooks/use-Task-Hook'
 
 type taskForm = {
     title: string,
@@ -38,50 +36,26 @@ const CreateTask = () => {
 
     const { register, reset, handleSubmit } = useForm<taskForm>()
 
-    const queryClient = useQueryClient()
+    const { mutate, isPending } = useCreateTask()
 
-
-    const { mutate, isPending } = useMutation({
-        mutationFn: async (data: any) => {
-            const token = localStorage.getItem("token")
-            if (!token) throw new Error("Token missing")
-            const headers = {
-                Authorization: `${token}`,
-                "Content-Type": "application/json"
-            }
-
-            const body = {
-                ...data,
-                startDate: startDate?.toISOString() ,
-                endDate: endDate?.toISOString() || null,
-                status
-            };
-            console.log(body)
-
-            const response = await createTaskAPI(body, headers)
-            return response.data
-        },
-        onSuccess: (res) => {
-            console.log(res)
-            reset(); // form reset
-            setStartDate(new Date());
-            setEndDate(undefined);
-            setStatus('');
-            setopen(false);
-            queryClient.invalidateQueries({queryKey:["taskKey"]});
-        },
-        onError: (err: any) => {
-
-            toast.error(err.response?.data?.message || "Failed to create Task")
-        }
-    })
-
-
-    const onSubmit = (data: taskForm) => {
-        console.log("Form submit Triggered",data)
-        mutate(data)
-
+   const onSubmit = (data: taskForm) => {
+  const payload = {
+    ...data,
+    startDate,
+    endDate,
+    status,
+  };
+  
+  mutate(payload, {
+    onSuccess: () => {  
+        reset();
+      setStartDate(new Date());
+      setEndDate(undefined);
+      setStatus('planning');
+      setopen(false);
     }
+  })
+}
 
 
     return (
